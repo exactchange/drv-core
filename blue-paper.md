@@ -156,7 +156,7 @@ Buying things with this cryptocurrency is very similar to buying things with USD
 
 Investing with this cryptocurrency is closer to investing in a mortgage than investing in a startup, in that the investment itself can be refinanced against its current USD value. Let's say you invest 100.00 coin valued at 1000.00 USD in a company. If at a later date the coin is valued at 2000.00 USD, the investment can be refinanced, and as an investor you can make capital calls on that equity.
 
-## Implications
+## Implications & Vision
 
 **Accepting crypto as payment for products & services**
 
@@ -170,6 +170,18 @@ This coin can be seen as "hyper stable" because in the case of a USD crash, this
 
 In other words, consumers in the economy will typically choose to transact with whichever currency yields the best value for them in a transaction. In the case of a USD crash, transactions in the network would move to mostly crypto, leaving USD behind. In the case of a hyper-inflated coin, consumers will continue to transact primarily in USD.
 
-## Vision
+**Vision**
 
 For coin creators choosing to fork this blockchain and start a new coin, the technical concepts outlined in this document should be extended in a white paper that describes the project's overall philosophy and long-term vision. The white paper is not a replacement for this technical overview, but can serve as a supplement to help your blockchain users understand the purpose of your cryptocurrency.
+
+## Key Files
+
+• Price API: [api/api.price.js](https://github.com/exactchange/blockchain/blob/master/api/api.price.js)
+
+• Transaction API: [api/api.transaction.js](https://github.com/exactchange/blockchain/blob/master/api/api.transaction.js)
+
+• Transaction Lifecycle Events: [events/events.transaction.js](https://github.com/exactchange/blockchain/blob/master/events/events.transaction.js)
+
+* * *
+
+• Underlying data structure: [crypto-linked-list](https://github.com/exactchange/linked-list)
