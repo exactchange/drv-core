@@ -183,5 +183,5 @@ For coin creators choosing to fork this blockchain and start a new coin, the tec
 • Transaction Lifecycle Events: [events/events.transaction.js](https://github.com/exactchange/blockchain/blob/master/events/events.transaction.js)
 
 * * *
-
 • Underlying data structure: [crypto-linked-list](https://github.com/exactchange/linked-list)
+* * *
