@@ -40,7 +40,7 @@ Buyers and sellers may reserve a right to only agree to transactions of a certai
 
 ## Trading EMBR
 
-Special kinds of tokens may emerge for day trading purposes where the token is not accepted at any store or for any product or service, and it only exists to be purchased by traders. Because any token can be liquidated at any time, there is no need for a trader to strategize around the hype of which token is trending today, except for minute vendor price differences (that fall within the Deviation Rate). In terms of its base value though, a day trader is effectively trading EMBR, regardless of the token held. The purpose of buying a token outside of trading it is unique to its specific market utility in its economy.
+Special kinds of tokens may emerge for day trading purposes where the token is not accepted at any store or for any product or service, and it only exists to be purchased by traders. Because any token can be liquidated at any time, there is no need for a trader to strategize around the hype of which token is trending today, except for minute vendor price differences (that fall within the Deviation Rate). In terms of its base value though, a day trader is effectively trading EMBR, regardless of the token held. The purpose of buying a token outside of trading it is specific to its market utility in its economy.
 
 ## Conclusion
 
