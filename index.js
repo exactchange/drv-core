@@ -2,6 +2,8 @@
  * (default)
  */
 
+require('dotenv').config();
+
 (() => {
 
   /*
@@ -61,14 +63,14 @@
         recipientAddress,
         currency,
         usdAmount,
-        coinAmount,
+        embrAmount,
         isTest
       }) => {
         const isValid = Boolean(
           senderAddress.length === 36 &&
           recipientAddress.length === 36 &&
-          (currency === 'usd' || currency === 'coin') &&
-          coinAmount && usdAmount
+          (currency === 'usd' || currency === 'embr') &&
+          embrAmount && usdAmount
         );
 
         if (isTest) {
@@ -86,7 +88,7 @@
           recipientAddress,
           currency,
           usdAmount: Math.max(1, usdAmount),
-          coinAmount: Math.max(0.01, coinAmount)
+          embrAmount: Math.max(0.01, embrAmount)
         });
 
         let response = {

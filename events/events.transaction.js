@@ -14,14 +14,14 @@
       recipientAddress,
       currency,
       usdAmount,
-      coinAmount
+      embrAmount
     }) => {
       const success = await transactionApi.createTransaction({
         sender: senderAddress,
         recipient: recipientAddress,
         currency,
         usdAmount,
-        coinAmount,
+        embrAmount,
         currentPrice: priceApi.price,
         currentInventory: priceApi.inventory
       });
@@ -33,7 +33,7 @@
       const currentUsdValue = parseFloat(
         Math.max(
           0.001,
-          usdAmount / coinAmount
+          usdAmount / embrAmount
         )
       );
 
@@ -41,11 +41,11 @@
         updatedPrice = currentUsdValue;
 
         console.log(
-          `<Blockchain> A proof of value was asserted: "${coinAmount.toFixed(2)} COIN == ${usdAmount.toFixed(2)} USD".`,
+          `<Embercoin> A proof of value was asserted: "${embrAmount.toFixed(2)} COIN == ${usdAmount.toFixed(2)} USD".`,
         );
       }
 
-      if (currency === 'coin') {
+      if (currency === 'embr') {
         const priceDifference = parseFloat(
           Math.abs(priceApi.price - currentUsdValue)
         );
@@ -54,15 +54,15 @@
           updatedPrice = currentUsdValue;
 
           console.log(
-            `<Blockchain> A proof of value was asserted: "1.00 COIN == ${updatedPrice.toFixed(2)} USD".`,
+            `<Embercoin> A proof of value was asserted: "1.00 COIN == ${updatedPrice.toFixed(2)} USD".`,
           );
         } else {
           console.log(
-            `<Blockchain> Assertion Rejected: ${coinAmount.toFixed(2)} COIN is not proven to be worth ${usdAmount.toFixed(2)} USD within a standard deviation of 15%.`
+            `<Embercoin> Assertion Rejected: ${embrAmount.toFixed(2)} COIN is not proven to be worth ${usdAmount.toFixed(2)} USD within a standard deviation of 15%.`
           );
 
           console.log(
-            '<Blockchain> Correcting a misvaluation...'
+            '<Embercoin> Correcting a misvaluation...'
           );
 
           const modifier = (
@@ -77,7 +77,7 @@
           );
 
           console.log(
-            `<Blockchain> A corrected proof of value was asserted: "1.00 COIN == ${updatedPrice.toFixed(2)} USD (adjusted from ${currentUsdValue.toFixed(2)} USD)".`,
+            `<Embercoin> A corrected proof of value was asserted: "1.00 COIN == ${updatedPrice.toFixed(2)} USD (adjusted from ${currentUsdValue.toFixed(2)} USD)".`,
           );
         }
       }
@@ -85,16 +85,16 @@
       const updatedPriceDifference = parseFloat(updatedPrice - priceApi.price);
 
       const reward = updatedPriceDifference > 0 && (
-        parseFloat((updatedPriceDifference / priceApi.price) * coinAmount)
+        parseFloat((updatedPriceDifference / priceApi.price) * embrAmount)
       );
 
       if (reward) {
         const rewardTransactionResult = await onTransaction({
           senderAddress: 'treasury-0000-0000-0000-000000000000',
           recipientAddress,
-          currency: 'coin',
-          usdAmount: updatedPriceDifference * coinAmount,
-          coinAmount: reward
+          currency: 'embr',
+          usdAmount: updatedPriceDifference * embrAmount,
+          embrAmount: reward
         });
 
         if (rewardTransactionResult?.success) {

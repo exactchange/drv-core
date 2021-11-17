@@ -1,12 +1,14 @@
 {
-  "name": "crypto-blockchain",
-  "version": "1.0.3",
+  "name": "embercoin",
+  "version": "1.0.2",
   "scripts": {
     "start": "node index",
     "test": "node tests"
   },
   "dependencies": {
     "crypto-linked-list": "^1.0.3",
+    "dotenv": "^10.0.0",
+    "mongodb": "^4.1.4",
     "node-service-client": "^1.0.1"
   }
 }

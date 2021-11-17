@@ -22,7 +22,7 @@
             recipientAddress: '11111111-1111-1111-1111-111111111111',
             currency: 'usd',
             usdAmount: 1,
-            coinAmount: 1,
+            embrAmount: 1,
             isTest: true
           }
         },

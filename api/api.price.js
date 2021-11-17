@@ -3,13 +3,38 @@ API.Price
  */
 
 (() => {
+  const mongo = require('../mongo');
+
+  const {
+    BLOCKCHAIN_DB_NAME,
+    BLOCKCHAIN_MONGO_URI
+  } = process.env;
+
   /*
-  Memory
+  Database
   */
 
-  let inventory = 10000, price = 1;
+  let db, inventory, price = 0.01, prices = [];
 
-  const prices = [];
+  mongo(BLOCKCHAIN_MONGO_URI, async (error, client) => {
+    if (error) {
+      console.log('<Embercoin> :: Database Error:', error);
+
+      return;
+    }
+
+    db = client.db(BLOCKCHAIN_DB_NAME);
+
+    const pricesResult = await db.collection('transactions').find().toArray();
+
+    if (pricesResult.length) {
+      inventory = pricesResult[pricesResult.length - 1].currentInventory;
+      price = pricesResult[pricesResult.length - 1].currentPrice;
+      prices.push(...pricesResult.map(({ currentPrice }) => currentPrice));
+    }
+
+    console.log(`<Embercoin> :: Price and inventory loaded (Price: ${parseFloat(price).toFixed(2)} USD, Inventory: ${parseFloat(inventory).toFixed(2)}).`);
+  });
 
   /*
   Exports
@@ -45,15 +70,15 @@ API.Price
         prices.push(Math.max(parseFloat(0.001), parseFloat(price)));
 
         console.log(
-          `<Blockchain> A new valuation was asserted in a transaction, possibly changing the average coin price.`
+          `<Embercoin> A new valuation was asserted in a transaction, possibly changing the average coin price.`
         );
       },
 
-      updateInventory: coinAmount => {
-        inventory += coinAmount;
+      updateInventory: embrAmount => {
+        inventory += embrAmount;
 
         console.log(
-          `<Blockchain> The total number of coins is now ${inventory}`
+          `<Embercoin> The total number of coins is now ${inventory}`
         );
       }
     }

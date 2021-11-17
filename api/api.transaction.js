@@ -3,6 +3,13 @@ API.Transaction
  */
 
 (() => {
+  const mongo = require('../mongo');
+
+  const {
+    BLOCKCHAIN_DB_NAME,
+    BLOCKCHAIN_MONGO_URI
+  } = process.env;
+
   /*
   Dependencies
   */
@@ -10,10 +17,30 @@ API.Transaction
   const { LinkedList } = require('crypto-linked-list');
 
   /*
-  Memory
+  Database
   */
 
-  const transactions = new LinkedList;
+  let db, transactions;
+
+  mongo(BLOCKCHAIN_MONGO_URI, async (error, client) => {
+    if (error) {
+      console.log('<Embercoin> :: Database Error:', error);
+
+      return;
+    }
+
+    db = client.db(BLOCKCHAIN_DB_NAME);
+
+    const dbTransactionResult = await db.collection('transactions').find().toArray();
+
+    transactions = new LinkedList(
+      dbTransactionResult.length
+        ? dbTransactionResult
+        : []
+    );
+
+    console.log('<Embercoin> :: Transactions loaded.');
+  });
 
   /*
   Exports
@@ -53,7 +80,7 @@ API.Transaction
       recipient,
       currency,
       usdAmount,
-      coinAmount,
+      embrAmount,
       currentPrice,
       currentInventory
     }) => {
@@ -65,24 +92,14 @@ API.Transaction
         recipient,
         currency,
         usdAmount,
-        coinAmount,
+        embrAmount,
         currentPrice,
         currentInventory
       };
 
-      /*
-       * Persistence
-       * Your device's database work goes here
-       */
-
-      const dbResult = await (async () => ({
-        result: {
-          ok: true
-        }
-      }))();
-
-      /*
-       */
+      const dbResult = await db.collection('transactions').insertOne(
+        transaction
+      );
 
       if (!dbResult.result.ok) return;
 
@@ -95,7 +112,7 @@ API.Transaction
       }
 
       console.log(
-        `<Blockchain> A transaction was added (paid in ${currency.toUpperCase()}).`,
+        `<Embercoin> A transaction was added (paid in ${currency.toUpperCase()}).`,
         tail.data
       );
 
