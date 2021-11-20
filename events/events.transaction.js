@@ -29,7 +29,7 @@ const { generateId } = require('../algorithms');
         price = usdValue;
 
         console.log(
-          `<Embercoin> :: A proof of value was asserted: "${embrAmount.toFixed(2)} COIN == ${usdAmount.toFixed(2)} USD".`,
+          `<Embercoin> :: A proof of value was asserted: "${embrAmount.toFixed(2)} EMBR == ${usdAmount.toFixed(2)} USD".`,
         );
       }
 
@@ -42,11 +42,11 @@ const { generateId } = require('../algorithms');
           price = usdValue;
 
           console.log(
-            `<Embercoin> :: A proof of value was asserted: "1.00 COIN == ${price.toFixed(2)} USD".`,
+            `<Embercoin> :: A proof of value was asserted: "1.00 EMBR == ${price.toFixed(2)} USD".`,
           );
         } else {
           console.log(
-            `<Embercoin> :: Assertion Rejected: ${embrAmount.toFixed(2)} COIN is not proven to be worth ${usdAmount.toFixed(2)} USD within a standard deviation of 15%.`
+            `<Embercoin> :: Assertion Rejected: ${embrAmount.toFixed(2)} EMBR is not proven to be worth ${usdAmount.toFixed(2)} USD within a standard deviation of 15%.`
           );
 
           console.log(
@@ -65,7 +65,7 @@ const { generateId } = require('../algorithms');
           );
 
           console.log(
-            `<Embercoin> :: A corrected proof of value was asserted: "1.00 COIN == ${price.toFixed(2)} USD (adjusted from ${usdValue.toFixed(2)} USD)".`,
+            `<Embercoin> :: A corrected proof of value was asserted: "1.00 EMBR == ${price.toFixed(2)} USD (adjusted from ${usdValue.toFixed(2)} USD)".`,
           );
         }
       }
