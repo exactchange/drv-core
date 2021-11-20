@@ -1,6 +1,6 @@
 {
   "name": "embercoin",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "scripts": {
     "start": "node index",
     "test": "node tests"
@@ -9,6 +9,6 @@
     "crypto-linked-list": "^1.0.3",
     "dotenv": "^10.0.0",
     "mongodb": "^4.1.4",
-    "node-service-client": "^1.0.1"
+    "node-service-client": "^1.0.2"
   }
 }
