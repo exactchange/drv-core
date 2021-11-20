@@ -79,10 +79,10 @@ Rewards are always mined at the current value of EMBR, and therefore cannot gene
 ```
 // ./events/events.transaction.js
 
-const updatedPriceDifference = parseFloat(updatedPrice - priceApi.price);
+const priceDifference = parseFloat(price - priceApi.price);
 
-const reward = updatedPriceDifference > 0 && (
-  parseFloat((updatedPriceDifference / priceApi.price) * embrAmount)
+const reward = priceDifference > 0 && (
+  parseFloat(priceDifference * .1 * embrAmount)
 );
 
 if (reward) {
@@ -90,7 +90,7 @@ if (reward) {
     senderAddress: 'treasury-0000-0000-0000-000000000000',
     recipientAddress,
     currency: 'embr',
-    usdAmount: updatedPriceDifference * embrAmount,
+    usdAmount: priceDifference * embrAmount,
     embrAmount: reward
   });
 
@@ -117,12 +117,12 @@ As a merchant or trader, you can assert any value you want, but if your assertio
 // ./events/events.transaction.js
 
 const modifier = (
-  currentUsdValue < priceApi.price
+  usdValue < priceApi.price
     ? -0.15
     : 0.15
 );
 
-updatedPrice = parseFloat(
+price = parseFloat(
   parseFloat(priceApi.price * modifier) +
   parseFloat(priceApi.price)
 );

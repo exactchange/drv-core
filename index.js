@@ -22,20 +22,7 @@ require('dotenv').config();
   const transactionEvents = require('./events/events.transaction')({ transactionApi, priceApi });
   const validations = require('./validations');
   const enforcements = require('./enforcements');
-
-  /*
-  Algorithms
-  */
-
-  const g4 = () => {
-    return (((1 + Math.random()) * 0x10000) | 0)
-     .toString(16)
-     .substring(1);
-  };
-
-  const generateId = () => (
-    `${g4()}${g4()}-${g4()}-${g4()}-${g4()}-${g4()}${g4()}${g4()}`
-  );
+  const { generateId } = require('./algorithms');
 
   const getPrice24hAgo = () => {
     const transaction = transactionApi

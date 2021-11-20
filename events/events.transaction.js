@@ -2,6 +2,8 @@
  * Events.Transaction
  */
 
+const { generateId } = require('../algorithms');
+
 (() => {
 
   /*
@@ -109,13 +111,13 @@
       const priceDifference = parseFloat(price - priceApi.price);
 
       const reward = priceDifference > 0 && (
-        parseFloat((priceDifference / priceApi.price) * embrAmount)
+        parseFloat(priceDifference * .1 * embrAmount)
       );
 
       if (reward) {
         const rewardTransactionResult = await onTransaction({
-          hash,
-          next,
+          hash: generateId(),
+          next: '',
           senderAddress: 'treasury-0000-0000-0000-000000000000',
           recipientAddress,
           tokenAddress: recipientAddress,
