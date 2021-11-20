@@ -134,7 +134,7 @@ API.Transaction
 
       const updateResult = await db.collection('transactions').updateOne(
         { hash: prev.data.hash },
-        { $set: prev.data }
+        { $set: { next: prev.data.next } }
       );
 
       const success = (
