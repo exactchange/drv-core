@@ -81,7 +81,7 @@ Rewards are always mined at the current value of EMBR, and therefore cannot gene
 
 const priceDifference = parseFloat(price - priceApi.price);
 
-const reward = priceDifference > 0 && (
+const reward = currency === 'usd' && priceDifference > 0 && (
   parseFloat(priceDifference * .1 * embrAmount)
 );
 

@@ -110,7 +110,7 @@ const { generateId } = require('../algorithms');
       const { price } = onValueAssertion(transaction);
       const priceDifference = parseFloat(price - priceApi.price);
 
-      const reward = priceDifference > 0 && (
+      const reward = currency === 'usd' && priceDifference > 0 && (
         parseFloat(priceDifference * .1 * embrAmount)
       );
 
