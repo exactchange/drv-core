@@ -76,11 +76,16 @@ API.Transaction
     ),
 
     createTransaction: async ({
-      sender,
-      recipient,
+      hash,
+      next,
+      senderAddress,
+      recipientAddress,
+      tokenAddress,
       currency,
       usdAmount,
       embrAmount,
+      denomination,
+      status,
       currentPrice,
       currentInventory
     }) => {
@@ -88,35 +93,63 @@ API.Transaction
 
       const transaction = {
         timestamp: Date.now(),
-        sender,
-        recipient,
+        hash,
+        next,
+        senderAddress,
+        recipientAddress,
+        tokenAddress,
         currency,
         usdAmount,
         embrAmount,
+        denomination,
+        status,
         currentPrice,
         currentInventory
       };
 
-      const dbResult = await db.collection('transactions').insertOne(
-        transaction
-      );
-
-      if (!dbResult.result.ok) return;
-
       transactions.add(transaction);
 
-      let tail = transactions.head;
+      let prev, tail = transactions.head;
 
       while (tail.next) {
+        prev = tail;
         tail = tail.next;
+
+        prev.data.next = tail.data.hash;
       }
 
       console.log(
-        `<Embercoin> A transaction was added (paid in ${currency.toUpperCase()}).`,
+        `<Embercoin> :: A transaction was added (paid in ${currency.toUpperCase()}).`,
         tail.data
       );
 
-      return true;
+      console.log(
+        `<Embercoin> :: The next hash of the previous transaction was updated.`,
+        prev.data
+      );
+
+      const saveResult = await db.collection('transactions').insertOne(
+        tail.data
+      );
+
+      const updateResult = await db.collection('transactions').updateOne(
+        { hash: prev.data.hash },
+        { $set: prev.data }
+      );
+
+      const success = (
+        saveResult.result.ok &&
+        updateResult.result.ok
+      );
+
+      if (success) {
+        console.log('<Embercoin> :: 1 transaction was saved in the database.');
+        console.log('<Embercoin> :: 1 transaction was updated in the database.');
+      } else {
+        console.log('<Embercoin> :: There was a problem persisting transactions in the database.');
+      }
+
+      return success;
     }
   });
 })();

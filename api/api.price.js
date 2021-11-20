@@ -27,6 +27,10 @@ API.Price
 
     const pricesResult = await db.collection('transactions').find().toArray();
 
+    /*
+     * TODO: Derive `currentPrice` and `currentInventory` functionally
+     */
+
     if (pricesResult.length) {
       inventory = pricesResult[pricesResult.length - 1].currentInventory;
       price = pricesResult[pricesResult.length - 1].currentPrice;
@@ -34,6 +38,9 @@ API.Price
     }
 
     console.log(`<Embercoin> :: Price and inventory loaded (Price: ${parseFloat(price).toFixed(2)} USD, Inventory: ${parseFloat(inventory).toFixed(2)}).`);
+
+    /*
+     */
   });
 
   /*
@@ -70,7 +77,7 @@ API.Price
         prices.push(Math.max(parseFloat(0.001), parseFloat(price)));
 
         console.log(
-          `<Embercoin> A new valuation was asserted in a transaction, possibly changing the average coin price.`
+          `<Embercoin> :: A new proof of value was asserted in a transaction, possibly changing the average coin price.`
         );
       },
 
@@ -78,7 +85,7 @@ API.Price
         inventory += embrAmount;
 
         console.log(
-          `<Embercoin> The total number of coins is now ${inventory}`
+          `<Embercoin> :: The total number of coins is now ${inventory}`
         );
       }
     }

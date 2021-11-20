@@ -20,7 +20,8 @@
           body: {
             senderAddress: '00000000-0000-0000-0000-000000000000',
             recipientAddress: '11111111-1111-1111-1111-111111111111',
-            currency: 'usd',
+            tokenAddress: '11111111-1111-1111-1111-111111111111',
+            currency: 'embr',
             usdAmount: 1,
             embrAmount: 1,
             isTest: true

@@ -20,10 +20,22 @@ require('dotenv').config();
   const transactionApi = require('./api/api.transaction')();
   const priceApi = require('./api/api.price')();
   const transactionEvents = require('./events/events.transaction')({ transactionApi, priceApi });
+  const validations = require('./validations');
+  const enforcements = require('./enforcements');
 
   /*
-  Service (HTTP)
+  Algorithms
   */
+
+  const g4 = () => {
+    return (((1 + Math.random()) * 0x10000) | 0)
+     .toString(16)
+     .substring(1);
+  };
+
+  const generateId = () => (
+    `${g4()}${g4()}-${g4()}-${g4()}-${g4()}-${g4()}${g4()}${g4()}`
+  );
 
   const getPrice24hAgo = () => {
     const transaction = transactionApi
@@ -48,6 +60,10 @@ require('dotenv').config();
     );
   };
 
+  /*
+  Service (HTTP)
+  */
+
   module.exports = http({
     GET: {
       price: () => ({
@@ -61,17 +77,29 @@ require('dotenv').config();
       transaction: async ({
         senderAddress,
         recipientAddress,
+        tokenAddress,
         currency,
         usdAmount,
         embrAmount,
+        denomination = 1,
         isTest
       }) => {
-        const isValid = Boolean(
-          senderAddress.length === 36 &&
-          recipientAddress.length === 36 &&
-          (currency === 'usd' || currency === 'embr') &&
-          embrAmount && usdAmount
-        );
+        const usd = Math.max(1, usdAmount);
+        const embr = Math.max(0.01, embrAmount);
+
+        const transaction = {
+          hash: generateId(),
+          next: '',
+          senderAddress,
+          recipientAddress,
+          tokenAddress,
+          currency,
+          usdAmount: usd,
+          embrAmount: embr,
+          denomination
+        };
+
+        const isValid = validations.standard(transaction);
 
         if (isTest) {
           return {
@@ -83,26 +111,19 @@ require('dotenv').config();
           return BAD_REQUEST;
         }
 
-        const transactionResult = await transactionEvents.onTransaction({
-          senderAddress,
-          recipientAddress,
-          currency,
-          usdAmount: Math.max(1, usdAmount),
-          embrAmount: Math.max(0.01, embrAmount)
-        });
+        transaction.status = enforcements.standard(transaction);
 
-        let response = {
-          success: !!transactionResult.success
-        };
+        const result = await transactionEvents.onTransaction(transaction);
 
-        if (response.success) {
-          response.price = transactionResult.price;
-          response.price24hAgo = getPrice24hAgo();
-          response.marketCap = transactionResult.marketCap;
-          response.reward = transactionResult.reward;
+        if (!result?.success) {
+          return { success: false };
         }
 
-        return response;
+        return {
+          ...result,
+
+          price24hAgo: getPrice24hAgo()
+        };
       }
     },
     PUT: {},
