@@ -5,79 +5,75 @@
 (() => {
 
   /*
-  Private
-  */
-
-  const onValueAssertion = ({
-    currency,
-    embrAmount,
-    usdAmount
-  }) => {
-    let price;
-
-    const usdValue = parseFloat(
-      Math.max(
-        0.001,
-        usdAmount / embrAmount
-      )
-    );
-
-    if (currency === 'usd') {
-      price = usdValue;
-
-      console.log(
-        `<Embercoin> :: A proof of value was asserted: "${embrAmount.toFixed(2)} COIN == ${usdAmount.toFixed(2)} USD".`,
-      );
-    }
-
-    if (currency === 'embr') {
-      const priceDifference = parseFloat(
-        Math.abs(priceApi.price - usdValue)
-      );
-
-      if (priceDifference <= (priceApi.price * .15)) {
-        price = usdValue;
-
-        console.log(
-          `<Embercoin> :: A proof of value was asserted: "1.00 COIN == ${price.toFixed(2)} USD".`,
-        );
-      } else {
-        console.log(
-          `<Embercoin> :: Assertion Rejected: ${embrAmount.toFixed(2)} COIN is not proven to be worth ${usdAmount.toFixed(2)} USD within a standard deviation of 15%.`
-        );
-
-        console.log(
-          '<Embercoin> :: Correcting a misvaluation...'
-        );
-
-        const modifier = (
-          usdValue < priceApi.price
-            ? -0.15
-            : 0.15
-        );
-
-        price = parseFloat(
-          parseFloat(priceApi.price * modifier) +
-          parseFloat(priceApi.price)
-        );
-
-        console.log(
-          `<Embercoin> :: A corrected proof of value was asserted: "1.00 COIN == ${price.toFixed(2)} USD (adjusted from ${usdValue.toFixed(2)} USD)".`,
-        );
-      }
-    }
-
-    return {
-      price,
-      usdValue
-    };
-  };
-
-  /*
   Exports
   */
 
   module.exports = ({ transactionApi, priceApi }) => {
+    const onValueAssertion = ({
+      currency,
+      embrAmount,
+      usdAmount
+    }) => {
+      let price;
+
+      const usdValue = parseFloat(
+        Math.max(
+          0.001,
+          usdAmount / embrAmount
+        )
+      );
+
+      if (currency === 'usd') {
+        price = usdValue;
+
+        console.log(
+          `<Embercoin> :: A proof of value was asserted: "${embrAmount.toFixed(2)} COIN == ${usdAmount.toFixed(2)} USD".`,
+        );
+      }
+
+      if (currency === 'embr') {
+        const priceDifference = parseFloat(
+          Math.abs(priceApi.price - usdValue)
+        );
+
+        if (priceDifference <= (priceApi.price * .15)) {
+          price = usdValue;
+
+          console.log(
+            `<Embercoin> :: A proof of value was asserted: "1.00 COIN == ${price.toFixed(2)} USD".`,
+          );
+        } else {
+          console.log(
+            `<Embercoin> :: Assertion Rejected: ${embrAmount.toFixed(2)} COIN is not proven to be worth ${usdAmount.toFixed(2)} USD within a standard deviation of 15%.`
+          );
+
+          console.log(
+            '<Embercoin> :: Correcting a misvaluation...'
+          );
+
+          const modifier = (
+            usdValue < priceApi.price
+              ? -0.15
+              : 0.15
+          );
+
+          price = parseFloat(
+            parseFloat(priceApi.price * modifier) +
+            parseFloat(priceApi.price)
+          );
+
+          console.log(
+            `<Embercoin> :: A corrected proof of value was asserted: "1.00 COIN == ${price.toFixed(2)} USD (adjusted from ${usdValue.toFixed(2)} USD)".`,
+          );
+        }
+      }
+
+      return {
+        price,
+        usdValue
+      };
+    };
+
     const onTransaction = async ({
       hash,
       next,
@@ -148,6 +144,7 @@
     };
 
     return {
+      onValueAssertion,
       onTransaction
     };
   };
