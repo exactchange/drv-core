@@ -128,28 +128,20 @@ API.Transaction
         prev.data
       );
 
-      const saveResult = await db.collection('transactions').insertOne(
+      await db.collection('transactions').insertOne(
         tail.data
       );
 
-      const updateResult = await db.collection('transactions').updateOne(
+      console.log('<Embercoin> :: 1 transaction was saved in the database.');
+
+      await db.collection('transactions').updateOne(
         { hash: prev.data.hash },
         { $set: { next: prev.data.next } }
       );
 
-      const success = (
-        saveResult.result.ok &&
-        updateResult.result.ok
-      );
+      console.log('<Embercoin> :: 1 transaction was updated in the database.');
 
-      if (success) {
-        console.log('<Embercoin> :: 1 transaction was saved in the database.');
-        console.log('<Embercoin> :: 1 transaction was updated in the database.');
-      } else {
-        console.log('<Embercoin> :: There was a problem persisting transactions in the database.');
-      }
-
-      return success;
+      return true;
     }
   });
 })();

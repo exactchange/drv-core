@@ -111,7 +111,7 @@ require('dotenv').config();
           return BAD_REQUEST;
         }
 
-        transaction.status = enforcements.standard(transaction);
+        transaction.status = await enforcements.standard(transaction);
 
         const result = await transactionEvents.onTransaction(transaction);
 
