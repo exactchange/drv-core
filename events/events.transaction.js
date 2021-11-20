@@ -90,7 +90,7 @@
       denomination,
       status
     }) => {
-      const success = await transactionApi.createTransaction({
+      const transaction = {
         hash,
         next,
         senderAddress,
@@ -103,7 +103,9 @@
         status,
         currentPrice: priceApi.price,
         currentInventory: priceApi.inventory
-      });
+      };
+
+      const success = await transactionApi.createTransaction(transaction);
 
       if (!success) return;
 
