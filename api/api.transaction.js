@@ -118,28 +118,26 @@ API.Transaction
         prev.data.next = tail.data.hash;
       }
 
+      await db.collection('transactions').insertOne(
+        tail.data
+      );
+
       console.log(
         `<Embercoin> :: A transaction was added (paid in ${currency.toUpperCase()}).`,
         tail.data
       );
 
-      console.log(
-        `<Embercoin> :: The next hash of the previous transaction was updated.`,
-        prev.data
-      );
+      if (prev) {
+        await db.collection('transactions').updateOne(
+          { hash: prev.data.hash },
+          { $set: { next: prev.data.next } }
+        );
 
-      await db.collection('transactions').insertOne(
-        tail.data
-      );
-
-      console.log('<Embercoin> :: 1 transaction was saved in the database.');
-
-      await db.collection('transactions').updateOne(
-        { hash: prev.data.hash },
-        { $set: { next: prev.data.next } }
-      );
-
-      console.log('<Embercoin> :: 1 transaction was updated in the database.');
+        console.log(
+          `<Embercoin> :: The next hash of the previous transaction was updated.`,
+          prev.data
+        );
+      }
 
       return true;
     }
