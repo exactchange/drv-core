@@ -72,7 +72,7 @@ require('dotenv').config();
         isTest
       }) => {
         const usd = Math.max(1, usdAmount);
-        const embr = Math.max(0.01, embrAmount);
+        const embr = Math.max(0.0000000001, embrAmount);
 
         const transaction = {
           hash: generateId(),
