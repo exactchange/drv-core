@@ -74,7 +74,7 @@ API.Price
       },
 
       updatePrice: price => {
-        prices.push(Math.max(parseFloat(0.001), parseFloat(price)));
+        prices.push(Math.max(parseFloat(0.0000000001), parseFloat(price)));
 
         console.log(
           `<Embercoin> :: A new proof of value was asserted in a transaction, possibly changing the average coin price.`

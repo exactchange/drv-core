@@ -20,7 +20,7 @@ const { generateId } = require('../algorithms');
 
       const usdValue = parseFloat(
         Math.max(
-          0.001,
+          0.0000000001,
           usdAmount / embrAmount
         )
       );

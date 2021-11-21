@@ -38,14 +38,14 @@ Proof of Value occurs in the [`onTransaction`](./events/events.transaction.js) l
 
 A Proof of Value Assertion will be rejected if the assertion exceeds the Deviation Rate (see *Deviation Rate* below). When a Proof of Value is asserted against USD, the USD amount goes through two layers of validation:
 
-1. `usdAmount` must be higher than `0.001`, and is adjusted by the `embrAmount` it is asserted against:
+1. `usdAmount` must be higher than `0.0000000001`, and is adjusted by the `embrAmount` it is asserted against:
 
     ```
     // ./events/events.transaction.js
 
     const usdValue = parseFloat(
       Math.max(
-        0.001,
+        0.0000000001,
         usdAmount / embrAmount
       )
     );
