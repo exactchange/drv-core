@@ -14,7 +14,7 @@ API.Price
   Database
   */
 
-  let db, inventory = 10000, price = 0.01, prices = [];
+  let db, inventory = 1, price = 0.01, prices = [];
 
   mongo(BLOCKCHAIN_MONGO_URI, async (error, client) => {
     if (error) {
