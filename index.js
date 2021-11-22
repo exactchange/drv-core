@@ -56,7 +56,8 @@ require('dotenv').config();
       price: () => ({
         price: priceApi.price,
         marketCap: priceApi.marketCap,
-        price24hAgo: getPrice24hAgo(),
+        inventory: priceApi.inventory,
+        price24hAgo: getPrice24hAgo()
       }),
       transactions: () => transactionApi.getTransactions()
     },
