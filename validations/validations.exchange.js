@@ -10,6 +10,9 @@ module.exports = ({
   denomination
 }) => Boolean(
   (senderAddress.length === 36) &&
-  (senderAddress === recipientAddress) &&
+  (
+    (senderAddress === recipientAddress) ||
+    (recipientAddress.match('treasury'))
+  ) &&
   (currency === 'embr' && embrAmount && denomination >= 0.0000000001)
 );

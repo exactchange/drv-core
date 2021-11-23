@@ -1,6 +1,6 @@
 {
   "name": "embercoin",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "scripts": {
     "start": "node index",
     "test": "node tests"
