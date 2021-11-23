@@ -105,7 +105,7 @@ const { generateId } = require('../algorithms');
         denomination,
         status,
         currentPrice,
-        currentInventory
+        currentInventory: currentInventory.embr
       };
 
       const success = await transactionApi.createTransaction(transaction);

@@ -56,10 +56,10 @@ require('dotenv').config();
         const price24hAgo = await getPrice24hAgo();
 
         return {
-          price: price,
+          price,
           price24hAgo: price24hAgo || price,
-          marketCap: marketCap,
-          inventory: inventory
+          marketCap,
+          inventory
         }
       },
       transactions: () => transactionApi.getTransactions()

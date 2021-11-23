@@ -95,7 +95,7 @@ API.Price
       const inventory = await getInventory();
       const price = await getPrice();
 
-      return (inventory * parseFloat(price)).toFixed(2);
+      return parseFloat(inventory * price).toFixed(2);
     };
 
     return {
