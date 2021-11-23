@@ -11,12 +11,14 @@ const { generateId } = require('../algorithms');
   */
 
   module.exports = ({ transactionApi, priceApi }) => {
-    const onValueAssertion = ({
+    const onValueAssertion = async ({
       currency,
       embrAmount,
       usdAmount
     }) => {
       let price;
+
+      const apiPrice = await priceApi.getPrice();
 
       const usdValue = parseFloat(
         Math.max(
@@ -35,10 +37,10 @@ const { generateId } = require('../algorithms');
 
       if (currency === 'embr') {
         const priceDifference = parseFloat(
-          Math.abs(priceApi.price - usdValue)
+          Math.abs(apiPrice - usdValue)
         );
 
-        if (priceDifference <= (priceApi.price * .15)) {
+        if (priceDifference <= (apiPrice * .15)) {
           price = usdValue;
 
           console.log(
@@ -54,14 +56,14 @@ const { generateId } = require('../algorithms');
           );
 
           const modifier = (
-            usdValue < priceApi.price
+            usdValue < apiPrice
               ? -0.15
               : 0.15
           );
 
           price = parseFloat(
-            parseFloat(priceApi.price * modifier) +
-            parseFloat(priceApi.price)
+            parseFloat(apiPrice * modifier) +
+            parseFloat(apiPrice)
           );
 
           console.log(
@@ -88,6 +90,9 @@ const { generateId } = require('../algorithms');
       denomination,
       status
     }) => {
+      const currentPrice = await priceApi.getPrice();
+      const currentInventory = await priceApi.getInventory();
+
       const transaction = {
         hash,
         next,
@@ -99,23 +104,23 @@ const { generateId } = require('../algorithms');
         embrAmount,
         denomination,
         status,
-        currentPrice: priceApi.price,
-        currentInventory: priceApi.inventory
+        currentPrice,
+        currentInventory
       };
 
       const success = await transactionApi.createTransaction(transaction);
 
       if (!success) return;
 
-      const { price } = onValueAssertion(transaction);
-      const priceDifference = parseFloat(price - priceApi.price);
+      const { price } = await onValueAssertion(transaction);
+      const priceDifference = parseFloat(price - currentPrice);
 
       const reward = currency === 'usd' && priceDifference > 0 && (
         parseFloat(priceDifference * .1 * embrAmount)
       );
 
       if (reward) {
-        const rewardTransactionResult = await onTransaction({
+        await onTransaction({
           hash: generateId(),
           next: '',
           senderAddress: 'treasury-0000-0000-0000-000000000000',
@@ -126,21 +131,17 @@ const { generateId } = require('../algorithms');
           embrAmount: reward,
           denomination,
           status,
-          currentPrice: priceApi.price,
-          currentInventory: priceApi.inventory
+          currentPrice,
+          currentInventory
         });
-
-        if (rewardTransactionResult?.success) {
-          priceApi.updateInventory(reward);
-        }
       }
 
-      await priceApi.updatePrice(price);
+      const marketCap = await priceApi.getMarketCap();
 
       return {
         success,
         price,
-        marketCap: priceApi.marketCap,
+        marketCap,
         reward
       };
     };

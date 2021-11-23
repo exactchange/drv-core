@@ -40,11 +40,7 @@ require('dotenv').config();
       ))
       .pop();
 
-    return (
-      transaction
-        ? transaction.currentPrice
-        : priceApi.price
-    );
+    return transaction && transaction.currentPrice;
   };
 
   /*
@@ -53,12 +49,19 @@ require('dotenv').config();
 
   module.exports = http({
     GET: {
-      price: () => ({
-        price: priceApi.price,
-        marketCap: priceApi.marketCap,
-        inventory: priceApi.inventory,
-        price24hAgo: getPrice24hAgo()
-      }),
+      price: async () => {
+        const price = await priceApi.getPrice();
+        const marketCap = await priceApi.getMarketCap();
+        const inventory = await priceApi.getInventory();
+        const price24hAgo = await getPrice24hAgo();
+
+        return {
+          price: price,
+          price24hAgo: price24hAgo || price,
+          marketCap: marketCap,
+          inventory: inventory
+        }
+      },
       transactions: () => transactionApi.getTransactions()
     },
     POST: {
@@ -87,7 +90,10 @@ require('dotenv').config();
           denomination
         };
 
-        const isValid = validations.standard(transaction);
+        const isValid = (
+          validations.standard(transaction) ||
+          validations.exchange(transaction)
+        );
 
         if (isTest) {
           return {
@@ -107,10 +113,13 @@ require('dotenv').config();
           return { success: false };
         }
 
+        const price = await priceApi.getPrice();
+        const price24hAgo = await getPrice24hAgo() || price;
+
         return {
           ...result,
 
-          price24hAgo: getPrice24hAgo()
+          price24hAgo
         };
       }
     },

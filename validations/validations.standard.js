@@ -16,5 +16,5 @@ module.exports = ({
   (tokenAddress === senderAddress || tokenAddress === recipientAddress) &&
   (currency === 'usd' || currency === 'embr') &&
   (embrAmount && usdAmount) &&
-  denomination >= 0.01
+  denomination >= 0.0000000001
 );

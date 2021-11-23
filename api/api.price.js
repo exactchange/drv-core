@@ -3,6 +3,10 @@ API.Price
  */
 
 (() => {
+  /*
+  Database
+  */
+
   const mongo = require('../mongo');
 
   const {
@@ -10,11 +14,7 @@ API.Price
     BLOCKCHAIN_MONGO_URI
   } = process.env;
 
-  /*
-  Database
-  */
-
-  let db, inventory = 1, price = 0.01, prices = [];
+  let db;
 
   mongo(BLOCKCHAIN_MONGO_URI, async (error, client) => {
     if (error) {
@@ -24,23 +24,6 @@ API.Price
     }
 
     db = client.db(BLOCKCHAIN_DB_NAME);
-
-    const pricesResult = await db.collection('transactions').find().toArray();
-
-    /*
-     * TODO: Derive `currentPrice` and `currentInventory` functionally
-     */
-
-    if (pricesResult.length) {
-      inventory = pricesResult[pricesResult.length - 1].currentInventory;
-      price = pricesResult[pricesResult.length - 1].currentPrice;
-      prices.push(...pricesResult.map(({ currentPrice }) => currentPrice));
-    }
-
-    console.log(`<Embercoin> :: Price and inventory loaded (Price: ${parseFloat(price).toFixed(2)} USD, Inventory: ${parseFloat(inventory).toFixed(2)}).`);
-
-    /*
-     */
   });
 
   /*
@@ -48,46 +31,77 @@ API.Price
   */
 
   module.exports = () => {
-    const getPrice = () => {
-      const averagePrice = prices.length < 2
-        ? price
-        : (
-          prices.reduce((a, b) => parseFloat(a) + parseFloat(b)) / prices.length
-        );
+    const getPrice = async () => {
+      const transactionsResult = await db.collection('transactions').find().toArray();
 
-      return parseFloat(averagePrice).toFixed(2);
+      if (transactionsResult.length) {
+        const prices = transactionsResult.map(({ currentPrice }) => currentPrice);
+
+        const averagePrice = prices.length < 2
+          ? prices[0]
+          : prices.reduce((a, b) => parseFloat(a) + parseFloat(b)) / prices.length;
+
+        return parseFloat(averagePrice).toFixed(2);
+      }
+
+      return '-1.00';
+    };
+
+    const getInventory = async () => {
+      const transactionsResult = await db.collection('transactions').find().toArray();
+
+      if (transactionsResult.length) {
+        let embr = 1;
+        const tokens = {};
+
+        transactionsResult.forEach(({
+          senderAddress,
+          recipientAddress,
+          tokenAddress,
+          embrAmount,
+          currency,
+          denomination
+        }) => {
+          if (currency === 'usd') return;
+
+          const tokenAmount = (embrAmount * parseInt(denomination, 10));
+
+          if (tokens[tokenAddress] === undefined) {
+            tokens[tokenAddress] = 0;
+          }
+
+          if (senderAddress.match('treasury')) {
+            embr += embrAmount;
+          }
+
+          if (recipientAddress.match('treasury')) {
+            embr -= embrAmount;
+          }
+
+          if (senderAddress === recipientAddress) {
+            tokens[tokenAddress] -= tokenAmount;
+            tokens[senderAddress] += tokenAmount;
+          }
+        });
+
+        return {
+          embr,
+          tokens
+        };
+      }
+    };
+
+    const getMarketCap = async () => {
+      const inventory = await getInventory();
+      const price = await getPrice();
+
+      return (inventory * parseFloat(price)).toFixed(2);
     };
 
     return {
-      get price() {
-        return getPrice();
-      },
-
-      get marketCap() {
-        const price = getPrice();
-
-        return (inventory * parseFloat(price)).toFixed(2);
-      },
-
-      get inventory() {
-        return inventory;
-      },
-
-      updatePrice: price => {
-        prices.push(Math.max(parseFloat(0.0000000001), parseFloat(price)));
-
-        console.log(
-          `<Embercoin> :: A new proof of value was asserted in a transaction, possibly changing the average coin price.`
-        );
-      },
-
-      updateInventory: embrAmount => {
-        inventory += embrAmount;
-
-        console.log(
-          `<Embercoin> :: The total number of coins is now ${inventory}`
-        );
-      }
+      getPrice,
+      getInventory,
+      getMarketCap
     }
   };
 })();
