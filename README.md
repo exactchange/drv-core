@@ -45,3 +45,11 @@ Special kinds of tokens may emerge for day trading purposes where the token is n
 ## Anonymous Tokens
 
 An anonymous token is any EMBR amount accounted for by a blockchain participant where the participant does not host their own instance of Embercoin, and is not broadcasting anything from an `/info` NET endpoint about their token name, logo, or denomination.
+
+## Contracts
+
+Contracts are agreements between participants in a transaction that are specified in the request by their string name (e.g. `{ contract: "standard" }`). Currently there are 2 kinds of contracts:
+
+**Standard**: The standard transaction agreement for selling and/or transferring tokens between users where EMBR is transferred for an optional USD payment, and rewards are mined, if applicable.
+
+**Exchange**: The transaction agreement for liquidating a foreign token in order to supply a native token.
