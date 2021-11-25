@@ -72,7 +72,7 @@ require('dotenv').config();
         currency,
         usdAmount,
         embrAmount,
-        denomination = 1,
+        contract = 'standard',
         isTest
       }) => {
         const usd = Math.max(1, usdAmount);
@@ -86,14 +86,10 @@ require('dotenv').config();
           tokenAddress,
           currency,
           usdAmount: usd,
-          embrAmount: embr,
-          denomination
+          embrAmount: embr
         };
 
-        const isValid = (
-          validations.standard(transaction) ||
-          validations.exchange(transaction)
-        );
+        const isValid = validations[contract](transaction);
 
         if (isTest) {
           return {

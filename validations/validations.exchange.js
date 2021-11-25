@@ -2,17 +2,21 @@
 Validations.Exchange
  */
 
+const {
+  EMBR_TEXT,
+  TREASURY_ADDRESS
+} = require('../currency');
+
 module.exports = ({
   senderAddress,
   recipientAddress,
   currency,
-  embrAmount,
-  denomination
+  embrAmount
 }) => Boolean(
   (senderAddress.length === 36) &&
   (
     (senderAddress === recipientAddress) ||
-    (recipientAddress.match('treasury'))
+    (recipientAddress === TREASURY_ADDRESS)
   ) &&
-  (currency === 'embr' && embrAmount && denomination >= 0.0000000001)
+  (currency === EMBR_TEXT && embrAmount)
 );

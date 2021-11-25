@@ -84,7 +84,6 @@ API.Transaction
       currency,
       usdAmount,
       embrAmount,
-      denomination,
       status,
       currentPrice,
       currentInventory
@@ -101,7 +100,6 @@ API.Transaction
         currency,
         usdAmount,
         embrAmount,
-        denomination,
         status,
         currentPrice,
         currentInventory

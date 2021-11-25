@@ -3,16 +3,21 @@ API.Price
  */
 
 (() => {
+  const {
+    USD_TEXT,
+    TREASURY_ADDRESS
+  } = require('../currency');
+
   /*
   Database
   */
-
-  const mongo = require('../mongo');
 
   const {
     BLOCKCHAIN_DB_NAME,
     BLOCKCHAIN_MONGO_URI
   } = process.env;
+
+  const mongo = require('../mongo');
 
   let db;
 
@@ -51,43 +56,26 @@ API.Price
       const transactionsResult = await db.collection('transactions').find().toArray();
 
       if (transactionsResult.length) {
-        let embr = 1;
-        const tokens = {};
+        let inventory = 1;
 
         transactionsResult.forEach(({
           senderAddress,
           recipientAddress,
-          tokenAddress,
           embrAmount,
-          currency,
-          denomination
+          currency
         }) => {
-          if (currency === 'usd') return;
+          if (currency === USD_TEXT) return;
 
-          const tokenAmount = (embrAmount * parseInt(denomination, 10));
-
-          if (tokens[tokenAddress] === undefined) {
-            tokens[tokenAddress] = 0;
+          if (senderAddress === TREASURY_ADDRESS) {
+            inventory += embrAmount;
           }
 
-          if (senderAddress.match('treasury')) {
-            embr += embrAmount;
-          }
-
-          if (recipientAddress.match('treasury')) {
-            embr -= embrAmount;
-          }
-
-          if (senderAddress === recipientAddress) {
-            tokens[tokenAddress] -= tokenAmount;
-            tokens[senderAddress] += tokenAmount;
+          if (recipientAddress === TREASURY_ADDRESS) {
+            inventory -= embrAmount;
           }
         });
 
-        return {
-          embr,
-          tokens
-        };
+        return inventory;
       }
     };
 
@@ -95,7 +83,7 @@ API.Price
       const inventory = await getInventory();
       const price = await getPrice();
 
-      return (inventory.embr * parseFloat(price)).toFixed(2);
+      return (inventory * parseFloat(price)).toFixed(2);
     };
 
     return {
