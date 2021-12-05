@@ -6,7 +6,7 @@ const fetch = require('node-fetch-commonjs');
 
 const { COMPLETE, PENDING } = require('../statuses');
 
-module.exports = async (transaction, peers = []) => {
+module.exports = async (transaction, peers) => {
   let confidence = 0, didConnectAndSend = false;
 
   await Promise.all(
