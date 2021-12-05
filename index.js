@@ -73,7 +73,7 @@ require('dotenv').config();
         usdAmount,
         embrAmount,
         contract = 'standard',
-        peerUrls = [],
+        peers = [],
         isTest
       }) => {
         const usd = Math.max(1, usdAmount);
@@ -107,10 +107,10 @@ require('dotenv').config();
         if (transactions.find(({ hash }) => hash === transaction.hash)) {
           console.log('<Embercoin> :: Transaction already exists. Skipping lifecycle, validation, & enforcements.');
 
-          return { success: true };
+          return { success: false };
         }
 
-        transaction.status = await enforcements.standard(transaction, peerUrls);
+        transaction.status = await enforcements.standard(transaction, peers);
 
         const result = await transactionEvents.onTransaction(transaction);
 

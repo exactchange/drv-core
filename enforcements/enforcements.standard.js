@@ -4,11 +4,11 @@ Enforcements.Standard
 
 const { COMPLETE, PENDING } = require('../statuses');
 
-module.exports = async (transaction, peerUrls = []) => {
+module.exports = async (transaction, peers = []) => {
   let confidence = 0, didConnectAndSend = false;
 
   await Promise.all(
-    peerUrls.map(async url => {
+    peers.map(async url => {
       if (!url) return;
 
       const transactionResult = await fetch(
