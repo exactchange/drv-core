@@ -2,7 +2,7 @@
 Enforcements.Standard
  */
 
-const fetch = require('node-fetch');
+const fetch = require('node-fetch-commonjs');
 
 const { COMPLETE, PENDING } = require('../statuses');
 
