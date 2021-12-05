@@ -101,6 +101,14 @@ require('dotenv').config();
           return BAD_REQUEST;
         }
 
+        const transactions = transactionApi.getTransactions();
+
+        if (transactions.find(({ hash }) => hash === transaction.hash)) {
+          console.log('<Embercoin> :: Transaction already exists. Skipping lifecycle, validation, & enforcements.');
+
+          return { success: true };
+        }
+
         transaction.status = await enforcements.standard(transaction);
 
         const result = await transactionEvents.onTransaction(transaction);
