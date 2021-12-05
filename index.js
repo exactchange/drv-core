@@ -73,6 +73,7 @@ require('dotenv').config();
         usdAmount,
         embrAmount,
         contract = 'standard',
+        peerUrls = [],
         isTest
       }) => {
         const usd = Math.max(1, usdAmount);
@@ -109,7 +110,7 @@ require('dotenv').config();
           return { success: true };
         }
 
-        transaction.status = await enforcements.standard(transaction);
+        transaction.status = await enforcements.standard(transaction, peerUrls);
 
         const result = await transactionEvents.onTransaction(transaction);
 
