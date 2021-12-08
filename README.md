@@ -38,6 +38,14 @@ When performing a basic balance inquiry or when transferring EMBR to another use
 
 Buyers and sellers may reserve a right to only agree to transactions of a certain level of confidence or within certain networks, and are encouraged to deal in only high-confidence or specified transactions. In scenarios where a lot of capital is at stake, extended closing periods may become the norm where a target confidence level must be retained for a period of time, or throughout a certain number of networks, before the token sale is finalized, at the discretion of the parties involved.
 
+## Consensus Tax
+
+Any node that processes peer EMBR transactions are paid a small percentage of the transaction amount called a consensus tax. The payment is received in the token being transferred. Transactions requiring a high level of confidence (the default level is 4, meaning at least 4 peers have to corroborate the value assertion) might have a higher consensus tax, as more peers are required to validate it. However, the consensus tax is set by either the buyer or the seller, can be 0, and peers reserve the right to process transaction requests or not based on the offer. If a buyer or seller wanted to achieve very high confidence in a transaction quickly, they could offer to pay a higher tax to peers who could process it; on the other hand, peers interested in processing as many transactions as possible might want to set a low tax rate in order to win transactions and earn passive revenues; others may offer to process transactions for free, or operate within limited trust networks.
+
+## Peer Lists & Limited Trust Networks
+
+Peer lists are a kind of limited trust network where peers, whose addresses are shared in a list (usually a file), mutually agree to a level of trust within their group by: Agreeing to always validate each others' transactions, or to process them tax-free, sharing a centralized database of transactions, and other means of exclusivity. Limited trust networks might also include any centralized deployment of Embercoin, or when many nodes are deploying forks or branches that have deviated from the source so much that they are no longer compatible.
+
 ## Trading EMBR
 
 Special kinds of tokens may emerge for day trading purposes where the token is not accepted at any store or for any product or service, and it only exists to be purchased by traders. Because any token can be liquidated at any time, there is no need for a trader to strategize around the hype of which token is trending today, except for minute vendor price differences (that fall within the Deviation Rate). In terms of its base value though, a day trader is effectively trading EMBR, regardless of the token held. The purpose of buying a token outside of trading it is specific to its market utility in its economy.
