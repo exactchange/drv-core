@@ -20,18 +20,6 @@ Refer to the [Embercoin Blue Paper](./blue-paper.md) for technical specifics on 
 
 Embercoin transactions may be announced publicly in the form of a publicly-viewable blockchain that can be read from a number of random peers. Only transactions with a high confidence level that are corroborated in multiple instances of Embercoin should be included, although transactions that were recently added may be shown in an unverified state until their validation process is complete. The public can see the amount and kind of currency transferred in every transaction, but the identities of the parties involved is obfuscated behind their respective address hashes in order to maintain a level of individual privacy.
 
-## Validations
-
-Validations are lifecycle hooks that run before a transaction is completed, and their `Boolean` return value determines whether or not the transaction will continue. Currently there are 2 kinds of validations:
-
-**Standard**: The standard validation for transferring EMBR between users.
-
-**Exchange**: The exchange validation for liquidating a foreign token in order to supply a native token.
-
-## Enforcements
-
-Enforcements are lifecycle hooks that run after a transaction has completed. The standard enforcement included in this distribution ensures that a transaction is broadcasted to a list of peers passed in by the processor.
-
 ## Native Ember Token (NET)
 
 [Native Ember Token](https://github.com/exactchange/native-ember-token) is a deployable digital currency that operates on Embercoin via the EMBR protocol. Any user with a minimum account balance of 0.0000000001 EMBR may define and alias (name) their new token to sell or freely distribute to their users in any amount and denomination they choose, limited to their account balance. Token denomination itself is untracked and unregulated in order to extend price flexibility to the token merchant. A blockchain transaction occurs only when tokens are transferred between users.
@@ -49,3 +37,39 @@ Any user can thus determine the validity of a transaction by checking at any tim
 When performing a basic balance inquiry or when transferring EMBR to another user, like any other request to Embercoin the values are determined functionally - that is, they are calculated at the time it's needed to be across a number of peer instances until the provided confidence threshold is met.
 
 Buyers and sellers may reserve a right to only agree to transactions of a certain level of confidence or within certain networks, and are encouraged to deal in only high-confidence or specified transactions. In scenarios where a lot of capital is at stake, extended closing periods may become the norm where a target confidence level must be retained for a period of time, or throughout a certain number of networks, before the token sale is finalized, at the discretion of the parties involved.
+
+## Contracts
+
+Contracts are agreements between participants in a transaction that are specified in the request by their string name (e.g. `{ contract: "standard" }`). Currently there are 2 kinds of contracts:
+
+**Standard**: The standard transaction agreement for selling and/or transferring tokens between users where EMBR is transferred for an optional USD payment, and rewards are mined, if applicable.
+
+**Exchange**: The transaction agreement for liquidating a foreign token in order to supply a native token.
+
+## Validations
+
+Validations are lifecycle hooks that run before a transaction is completed, and their `Boolean` return value determines whether or not the transaction will continue. Currently there are 2 kinds of validations:
+
+**Standard**: The standard validation for transferring EMBR between users.
+
+**Exchange**: The exchange validation for liquidating a foreign token in order to supply a native token.
+
+## Enforcements
+
+Enforcements are lifecycle hooks that run after a transaction has completed. The standard enforcement included in this distribution ensures that a transaction is broadcasted to a list of peers passed in by the processor.
+
+## Consensus Tax
+
+Any node that processes peer EMBR transactions may be paid a small percentage of the transaction amount called a consensus tax. The payment is received in the token being transferred. Transactions requiring a high level of confidence might have a higher consensus tax, as more peers are required to validate it. However, the consensus tax amount is set by either the buyer or the seller, it can be 0, and peers reserve the right to process transaction requests or not based on the tax offering. If a buyer or seller wanted to achieve very high confidence in a transaction quickly, they could offer to pay a higher tax to incentivize peers to process it; on the other hand, peers interested in processing as many transactions as possible might set a low tax rate in order to "win" transactions (to earn passive revenues); others may offer to process transactions entirely for free, or operate within limited trust networks.
+
+## Peer Lists & Limited Trust Networks
+
+Peer lists are a kind of limited trust network where peers, whose addresses are shared in a list (usually a file), mutually agree to a level of trust within their group by: Agreeing to always validate each other's transactions, or to process them tax-free, sharing a centralized database of transactions, and other means of exclusivity. Limited trust networks might also include any centralized deployment of Embercoin, or cases where many nodes are deploying forks or branches that have deviated from the source so much that they are no longer compatible with its rules.
+
+## Trading
+
+Special kinds of tokens may emerge for day trading purposes where the token is not accepted at any store or for any product or service, and it only exists to be purchased by traders. Because any token can be liquidated at any time, there is no need for a trader to strategize around the hype of which token is trending today, except for minute vendor price differences (that fall within the Deviation Rate). In terms of its base value though, a day trader is effectively trading Embercoin, regardless of the token held. The purpose of buying a token outside of trading it is specific to its market utility in its economy.
+
+## Anonymous Tokens
+
+An anonymous token is any EMBR amount accounted for by a blockchain participant where the participant does not host their own instance of Embercoin, and is not broadcasting anything from an `/info` NET endpoint about their token name, logo, or denomination.
