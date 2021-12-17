@@ -60,15 +60,34 @@ Enforcements are lifecycle hooks that run after a transaction has completed. The
 
 ## Consensus Tax
 
-Any node that processes peer EMBR transactions may be paid a small percentage of the transaction amount called a consensus tax. The payment is received in the token being transferred. Transactions requiring a high level of confidence might have a higher consensus tax, as more peers are required to validate it. However, the consensus tax amount is set by either the buyer or the seller, it can be 0, and peers reserve the right to process transaction requests or not based on the tax offering. If a buyer or seller wanted to achieve very high confidence in a transaction quickly, they could offer to pay a higher tax to incentivize peers to process it; on the other hand, peers interested in processing as many transactions as possible might set a low tax rate in order to "win" transactions (to earn passive revenues); others may offer to process transactions entirely for free, or operate within limited trust networks.
+Any node that processes peer EMBR transactions may be paid a small percentage of the transaction amount called a consensus tax. The payment is received in the token being transferred. Transactions requiring a high level of confidence might have a higher consensus tax, as more peers are required to validate it. However, the consensus tax amount is set by either the buyer or the seller, it can be 0, and peers reserve the right to process transaction requests or not based on the tax offering. If a buyer or seller wanted to achieve very high confidence in a transaction quickly, they could offer to pay a higher tax to incentivize peers to process it; on the other hand, peers interested in processing as many transactions as possible might set a low tax rate in order to "win" transactions (to earn passive revenues); others may offer to process transactions entirely for free. The standard enforcement, called "block consensus" requires 4 peers to establish consensus and move a transaction into the completed state, with the first and last peer being the same node, the initiator and verifier of the block.
 
-## Peer Lists & Limited Trust Networks
+## Block Consensus
 
-Peer lists are a kind of limited trust network where peers, whose addresses are shared in a list (usually a file), mutually agree to a level of trust within their group by: Agreeing to always validate each other's transactions, or to process them tax-free, sharing a centralized database of transactions, and other means of exclusivity. Limited trust networks might also include any centralized deployment of Embercoin, or cases where many nodes are deploying forks or branches that have deviated from the source so much that they are no longer compatible with its rules.
+In block consensus, the initiating node broadcasts a transaction to 3 other peers, offering the optional consensus tax as incentive to each node to echo the transaction:
+
+- Peer A initiates a transaction: _Anonymous Token 123 sent Peer A 1.00 EMBR_
+- Peer A offers Peer B _0.01 EMBR_ to echo the transaction
+- Peer B echoes both transactions (the initial transfer of _1.00 EMBR_ and the tax payment of _0.01 EMBR_)
+- Peer B offers Peer C _0.005 EMBR_ to echo these transactions
+- Peer C echoes the transactions
+- Peer C offers Peer D _0.002 EMBR_ to echo these transactions
+- Peer D echoes the transactions
+- Peer D offers Peer A _0.001 EMBR_ to verify the block
+
+```
+A → B
+↑   ↓
+D ← C
+```
+
+By the end of the block, Peer A spent _0.009 EMBR_ in consensus tax to Peers B, C, and D who received _0.005_, _0.003_, and _0.001 EMBR_ in tax payments respectively, in order to establish consensus that an anonymous token sent them _1.00 EMBR_. The initiator of a block (Peer A) is always the last peer who verifies it. So if Peers B, C, or D had tampered with the transaction payload at any point during consensus, Peer A would reject the block during its final validation, and could try again with different peers while that faulty block remains in a pending state, having insufficient consensus.
+
+Block consensus is one of many possible ways to establish redundancy - its main value is that it's quick, anonymous, and automatic, so it works well for everyday transactions. Vendors can achieve higher levels of confidence however by scaling up the number of required peers ("super block transactions"), or by relying on manual approvals at each step, or by inventing special means of consensus and enacting them through token contracts.
 
 ## Trading
 
-Special kinds of tokens may emerge for day trading purposes where the token is not accepted at any store or for any product or service, and it only exists to be purchased by traders. Because any token can be liquidated at any time, there is no need for a trader to strategize around the hype of which token is trending today, except for minute vendor price differences (that fall within the Deviation Rate). In terms of its base value though, a day trader is effectively trading Embercoin, regardless of the token held. The purpose of buying a token outside of trading it is specific to its market utility in its economy.
+Special kinds of tokens may emerge for trading purposes where the token is not accepted at any store or for any product or service, and it only exists to be purchased by other traders. Traders are effectively buying and selling the underlying Embercoin amount, regardless of the token held, and any token can be liquidated or exchanged at any time. The purpose of buying a token outside of trading it is specific to its market utility in its economy.
 
 ## Anonymous Tokens
 
