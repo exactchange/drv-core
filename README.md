@@ -50,13 +50,13 @@ Contracts are agreements between participants in a transaction that are specifie
 
 Validations are lifecycle hooks that run before a transaction is completed, and their `Boolean` return value determines whether or not the transaction will continue. Currently there are 2 kinds of validations:
 
-**Standard**: The standard validation for transferring EMBR between users.
+**[Standard](https://github.com/exactchange/embercoin/blob/master/validations/validations.standard.js)**: The standard validation for transferring EMBR between users.
 
-**Exchange**: The exchange validation for liquidating a foreign token in order to supply a native token.
+**[Exchange](https://github.com/exactchange/embercoin/blob/master/validations/validations.exchange.js)**: The exchange validation for liquidating a foreign token in order to supply a native token.
 
 ## Enforcements
 
-Enforcements are lifecycle hooks that run after a transaction has completed. The standard enforcement included in this distribution ensures that a transaction is broadcasted to a list of peers passed in by the processor.
+Enforcements are lifecycle hooks that run after a transaction has completed. The [Standard](https://github.com/exactchange/embercoin/blob/master/enforcements/enforcements.standard.js) enforcement included in this distribution ensures that a transaction is broadcasted to a list of peers for consensus.
 
 ## Consensus Tax
 
