@@ -42,9 +42,9 @@ Buyers and sellers may reserve a right to only agree to transactions of a certai
 
 Contracts are agreements between participants in a transaction that are specified in the request by their string name (e.g. `{ contract: "standard" }`). Currently there are 2 kinds of contracts:
 
-**Standard**: The standard transaction agreement for selling and/or transferring tokens between users where EMBR is transferred for an optional USD payment, and rewards are mined, if applicable.
+**[Standard](https://github.com/exactchange/native-ember-token/blob/master/src/contracts/contracts.standard.js)**: The standard transaction agreement for selling and/or transferring tokens between users where EMBR is transferred for an optional USD payment, and rewards are mined, if applicable.
 
-**Exchange**: The transaction agreement for liquidating a foreign token in order to supply a native token.
+**[Exchange](https://github.com/exactchange/native-ember-token/blob/master/src/contracts/contracts.exchange.js)**: The transaction agreement for liquidating a foreign token in order to supply a native token.
 
 ## Validations
 
