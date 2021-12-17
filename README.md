@@ -74,6 +74,8 @@ In block consensus, the initiating node broadcasts a transaction to 3 other peer
 - Peer C offers Peer D _0.002 EMBR_ to echo these transactions
 - Peer D echoes the transactions
 - Peer D offers Peer A _0.001 EMBR_ to verify the block
+- Peer A echoes the transactions
+- Peer A completes the transaction with the required confidence level
 
 ```
 A → B
