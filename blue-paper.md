@@ -128,52 +128,6 @@ price = parseFloat(
 );
 ```
 
-## Use Cases
-
-### Buying & selling crypto
-
-**Purchasing EMBR with USD**
-
-Purchasing EMBR with USD is always an assertion of value, and a Proof of Value will always be submitted in these transactions. Therefore, the simplest way to increase EMBR value is to trade more USD for it than it's currently worth. With a Deviation Rate of 15%, trades are protected from price gouging, excessive valuations based on hype ("pump and dump" schemes), and because price is effectively stabilized by a proportional spending of USD, the potential for a scam or sudden market crash is greatly diminished (See "Long-term sustainability beyond USD" below).
-
-**Listing EMBR for sale in USD**
-
-Although this blockchain is intended to be more stable than, say, Bitcoin whose valuations are based primarily on supply and demand, and is therefore subject to hype and scams, there is still a very high trading potential with EMBR, and trading is encouraged - particularly for traders who want to avoid highly-volatile coins anyway.
-
-**Holding EMBR long-term (value investing)**
-
-Beyond day-trading, value investing is also encouraged for those who see the longer-term value in a coin propped up by USD transactions. This design should not be confused with a "stablecoin", where the value is *dependent* upon the external reference (in this case USD), because in the case of a USD crash, EMBR's value would not be wholly affected (as in the case of a stablecoin), as products and services are still able to be purchased, and Proofs of Value, while based around USD, are asserted independently of the economic utility of USD (see "Long-term sustainability beyond USD" below).
-
-### Spending EMBR as money
-
-From day one, the goal of EMBR is to function as an alternative currency to USD. It may be tokenized in order to supply niche economies with EMBR in varying denominations, but the EMBR value of a token is locked upon distribution: For example, if 1 EMBR is purchased for 10.00 USD and then divided into 10 tokens, each token is locked at a value of 0.1 EMBR or 1.00 USD which is the value it asserts when it is eventually spent.
-
-**Buying products & services with EMBR**
-
-Buying things with EMBR is very similar to buying things with USD: Upon transacting, your account balance is adjusted accordingly, and the payment is transferred to the seller.
-
-**Investing in companies with EMBR**
-
-Investing with EMBR is closer to investing in a mortgage than investing in a startup, in that the investment itself can be refinanced against its current USD value. Let's say you invest 100.00 EMBR valued at 1000.00 USD in a company. If at a later date the EMBR is valued at 2000.00 USD, the investment can be refinanced, and as an investor you can make capital calls on that equity.
-
-## Implications & Vision
-
-**Accepting EMBR as payment for products & services**
-
-A merchant that backs up their transactions with this cryptocurrency plays an important role in the blockchain as a distributed appraiser and investor. Long-term value and stability cannot be ensured by trading alone, and there is a need for merchants who will accept USD alongside this cryptocurrency in order to ensure its value.
-
-In contributing value to the blockchain, merchants are rewarded earning additional revenues in the form of cryptocurrency. In a scenario where the merchant sells tokenized EMBR to their customers for USD, and also accepts it as payment for their products and services, the merchant has a potential to earn additional money from their sales that could not be earned by transacting in USD alone.
-
-**Long-term sustainability beyond USD**
-
-EMBR can be seen as "hyper stable" because in the case of a USD crash, EMBR's value would not be wholly affected, as Proofs of Value continue to be asserted, and are calculated independently of the economic utility of USD.
-
-In other words, consumers in the economy will typically choose to transact with whichever currency yields the best value for them in a transaction. In the case of a USD crash, transactions in the network would move to mostly crypto, leaving USD behind. In the case of a hyper-inflated EMBR, consumers will continue to transact primarily in USD.
-
-**Vision**
-
-For coin creators choosing to fork this blockchain and start a new coin, the technical concepts outlined in this document should be extended in a white paper that describes the project's overall philosophy and long-term vision. The white paper is not a replacement for this technical overview, but can serve as a supplement to help your blockchain users understand the purpose of your cryptocurrency.
-
 ## Key Files
 
 • Price API: [api/api.price.js](https://github.com/exactchange/embercoin/blob/master/api/api.price.js)
