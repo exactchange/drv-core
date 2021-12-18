@@ -64,7 +64,7 @@ Any node that processes peer EMBR transactions is paid a percentage of the trans
 
 ## Block Consensus
 
-In block consensus, the initiating node broadcasts a transaction to 3 other peers, offering the optional consensus tax as incentive to each node to echo the transaction:
+In block consensus, the initiating node broadcasts a transaction to 3 other peers, offering consensus tax as incentive to each node to echo the transaction:
 
 - Peer A initiates a transaction: _Anonymous Token 123 sent Peer A 1.00 EMBR_
 - Peer A offers Peer B _0.01 EMBR_ to echo the transaction
@@ -83,9 +83,9 @@ A → B
 D ← C
 ```
 
-By the end of the block, Peer A spent _0.009 EMBR_ in consensus tax to Peers B, C, and D who received _0.005_, _0.003_, and _0.001 EMBR_ in tax payments respectively, in order to establish consensus that an anonymous token sent them _1.00 EMBR_. The initiator of a block (Peer A) is always the last peer who verifies it. So if Peers B, C, or D had tampered with the transaction payload at any point during consensus, Peer A would reject the block during its final validation, and could try again with different peers while that faulty block remains in a pending state, having insufficient consensus.
+When the transaction completes, Peer A receives _0.991 EMBR_, having paid _0.009 EMBR_ in consensus tax to Peers B, C, and D who received _0.005_, _0.003_, and _0.001 EMBR_ respectively. The initiator of a block (Peer A) is always the last peer who verifies it. So if Peers B, C, or D had tampered with the transaction payload at any point during consensus, Peer A would reject the block during its final validation, and could try again with different peers while that faulty block remains in a pending state, having insufficient consensus.
 
-Block consensus is one of many possible ways to establish redundancy - its main value is that it's quick, anonymous, and automatic, so it works well for everyday transactions. Vendors can achieve higher levels of confidence however by scaling up the number of required peers ("super block transactions"), or by relying on manual approvals at each step, or by inventing special means of consensus and enacting them through token contracts.
+Block consensus is one of many possible ways to establish redundancy - it's quick, anonymous, and automatic. Vendors can achieve higher levels of confidence however by scaling up the number of required peers ("super blocks"), or by relying on manual approvals at each step, or by inventing special means of consensus and enacting them through token contracts.
 
 ## Trading
 
