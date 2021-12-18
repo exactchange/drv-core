@@ -89,7 +89,7 @@ D ← C
 
 When the transaction completes, Peer A receives _0.991 EMBR_, having paid _0.009 EMBR_ in consensus tax to Peers B, C, and D who received _0.005_, _0.003_, and _0.001 EMBR_ respectively. The initiator of a block (Peer A) is always the last peer who verifies it. So if Peers B, C, or D had tampered with the transaction payload at any point during consensus, Peer A would reject the block during its final validation, and could try again with different peers while that faulty block remains in a pending state, having insufficient consensus.
 
-To enforce randomness in finding peers, no two nodes can be involved in adjacent transactions. If Peer A from above wanted to initiate another transaction, Peers B, C, and D would be ineligible to echo it - and vice-versa.
+To enforce randomness in finding peers, no two nodes can be involved in adjacent transactions. If Peer A from above wanted to initiate another transaction, Peers B, C, and D would be ineligible to echo it - and vice-versa - until after processing at least one other transaction involving other peers.
 
 Block consensus is one of many possible ways to establish redundancy - it's quick, anonymous, and automatic. Vendors can achieve higher levels of confidence however by scaling up the number of required peers, by requiring a minimum consensus tax amount, or by inventing special means of consensus or validation and enacting them through token contracts.
 
