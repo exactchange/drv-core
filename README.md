@@ -46,6 +46,8 @@ Contracts are agreements between participants in a transaction that are specifie
 
 **[Exchange](https://github.com/exactchange/native-ember-token/blob/master/src/contracts/contracts.exchange.js)**: The transaction agreement for liquidating a foreign token in order to supply a native token.
 
+Contracts can encompass just one, or many transactions, and even establish long-term payment schedules involving various layers of validation and user interaction.
+
 ## Validations
 
 Validations are lifecycle hooks that run before a transaction is completed, and their `Boolean` return value determines whether or not the transaction will continue. Currently there are 2 kinds of validations:
@@ -53,6 +55,8 @@ Validations are lifecycle hooks that run before a transaction is completed, and 
 **[Standard](https://github.com/exactchange/embercoin/blob/master/validations/validations.standard.js)**: The standard validation for transferring EMBR between users.
 
 **[Exchange](https://github.com/exactchange/embercoin/blob/master/validations/validations.exchange.js)**: The exchange validation for liquidating a foreign token in order to supply a native token.
+
+In order to make low-risk transactions fully-automatic, ML/AI and other forms of model- or pattern-based learning might be implemented as additional validations, directed by special contracts. Validations might also include manual user approvals through authentication services.
 
 ## Enforcements
 
@@ -85,7 +89,7 @@ D ← C
 
 When the transaction completes, Peer A receives _0.991 EMBR_, having paid _0.009 EMBR_ in consensus tax to Peers B, C, and D who received _0.005_, _0.003_, and _0.001 EMBR_ respectively. The initiator of a block (Peer A) is always the last peer who verifies it. So if Peers B, C, or D had tampered with the transaction payload at any point during consensus, Peer A would reject the block during its final validation, and could try again with different peers while that faulty block remains in a pending state, having insufficient consensus.
 
-Block consensus is one of many possible ways to establish redundancy - it's quick, anonymous, and automatic. Vendors can achieve higher levels of confidence however by scaling up the number of required peers ("super blocks"), or by relying on manual approvals at each step, or by inventing special means of consensus and enacting them through token contracts.
+Block consensus is one of many possible ways to establish redundancy - it's quick, anonymous, and automatic. Vendors can achieve higher levels of confidence however by scaling up the number of required peers, by requiring a minimum consensus tax amount, or by inventing special means of consensus or validation and enacting them through token contracts.
 
 ## Trading
 
