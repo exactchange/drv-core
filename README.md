@@ -64,7 +64,7 @@ Enforcements are lifecycle hooks that run after a transaction has completed. The
 
 ## Consensus Tax
 
-Any node that processes peer EMBR transactions is paid a percentage of the transaction amount called a consensus tax, set by the initiator of the transaction. The tax is received in the token being transferred. Transactions requiring a high level of confidence might invoke a higher consensus tax - for example 1%, 10%, or even 25%+ of the total transaction amount. In addition to confidence thresholds, peers reserve the right to process transaction requests or not based on factors like the consensus tax offered. Consensus tax is optional - it can be between 0% and 100% of the transaction amount. The standard enforcement, called "block consensus" requires 4 peers to establish consensus in order to move a transaction into the completed state, with the first and last peer being the same node, the initiator and verifier of the block.
+Any node that processes peer EMBR transactions can be paid a percentage of the transaction amount called a consensus tax, set by the initiator of the transaction. The tax is received in the token being transferred. Transactions requiring a high level of confidence might invoke a high consensus tax - for example 1%, 10%, or even 25%+ of the total transaction amount. However the tax is optional - it can be between 0% and 100% of the transaction amount, and peers reserve the right to process transaction requests or not based on factors like the consensus tax offered. The standard enforcement, called "block consensus" requires 4 peers to establish consensus in order to move a transaction into the completed state, with the first and last peer being the same node, the initiator and verifier of the block.
 
 ## Block Consensus
 
