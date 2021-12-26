@@ -97,7 +97,7 @@ A → B → C → D → E → F → G → H → J → L ✕ I K
 7 transactions completed (3 incomplete) | 83.33% redundancy
 ```
 
-In the above scenario, Peer A of a network of 12 peers (A-L) initiates a transaction, paying consensus tax to Peer B. Only 2 nodes refused consensus, completing the intial transaction along with 6 subsequent tax rewards.
+In the above scenario, Peer A of a network of 12 peers (A-L) initiates a transaction, paying a small tax to Peer B. Peer B accepts and offers a cut of the tax to C who does the same with D, etc. each being incentivized to share witness of their receipt of payment. Only 2 nodes refused, completing the intial transaction along with 6 subsequent tax rewards. Nodes H, J, and L in this case miss out on what's left of the reward even though they accepted and completed the transaction, due to reaching the end of the eligible network (not enough eligible peers to echo it).
 
 ## Trading
 
