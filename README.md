@@ -64,11 +64,11 @@ Enforcements are lifecycle hooks that run after a transaction has completed. The
 
 ## Consensus Tax
 
-Any node that processes peer EMBR transactions can be paid a percentage of the transaction amount called a consensus tax, set by the initiator of the transaction. The tax is received in the token being transferred. Transactions requiring a high level of confidence might invoke a high consensus tax - for example 1%, 10%, or even 25%+ of the total transaction amount. However the tax is optional - it can be between 0% and 100% of the transaction amount, and peers reserve the right to process transaction requests or not based on factors like the consensus tax offered. The standard enforcement, called "block consensus" requires 4 peers to establish consensus in order to move a transaction into the completed state, with the first and last peer being the same node, the initiator and verifier of the block.
+Any node that processes peer EMBR transactions can be paid a percentage of the transaction amount called a consensus tax, set by the initiator of the transaction. The tax is received in the token being transferred. Transactions requiring a high level of confidence might invoke a higher tax - for example 1%, 10%, or even 25%+ of the total transaction amount, or a tax paid out to many peers. However the tax is optional - it can be between 0% and 100% of the transaction amount, and peers reserve the right to process transaction requests or not based on factors like the consensus tax offered. The standard enforcement requires at least 4 peers to establish consensus (redundancy) in order to move a transaction into the completed state, and to ensure randomness, no 2 nodes can echo each other's transaction twice in a row. Transactions are propagated throughout the larger network in a cascading fashion as echo fees compound the 4 peer requirement exponentially: 4 peers are each paid to echo a transaction, but to receive that echo fee each peer needs to get another 4 peers to echo the echo fee, and so-on. Eventually all transactions are maximally redundant in the larger network. When the tax reward becomes diluted to effectively a zero amount, or the data cost of storing a very high number of transactions is too high compared to the diluted fee, then there is no longer monetary incentive for peers to echo it, but some nodes offering tax-free consensus may choose to.
 
-## Block Consensus
+## Network Consensus
 
-In block consensus, the initiating node broadcasts a transaction to 3 other peers, offering consensus tax as incentive to each node to echo the transaction:
+The initiating node offers consensus tax as incentive to another node to echo a transaction. The node accepts the offer, then offers incentive to yet another node in order to echo that payment, and so-on down the line:
 
 - Peer A initiates a transaction: _Anonymous Token 123 sent Peer A 1.00 EMBR_
 - Peer A offers Peer B _0.01 EMBR_ to echo the transaction
@@ -77,21 +77,28 @@ In block consensus, the initiating node broadcasts a transaction to 3 other peer
 - Peer C echoes the transactions
 - Peer C offers Peer D _0.002 EMBR_ to echo these transactions
 - Peer D echoes the transactions
-- Peer D offers Peer A _0.001 EMBR_ to verify the block
-- Peer A echoes the transactions
-- Peer A completes the transaction with the required confidence level
+- Peer D offers Peer A _0.001 EMBR_ to echo these transactions
+- (Peer A's transaction is now complete)
+- Peer D offers Peer E _0.0005 EMBR_ to echo these transactions
+- Peer E echoes the transactions
+- (Peer B's transaction is now complete)
+- ...and so-on
+- 
 
 ```
-A → B
-↑   ↓
-D ← C
+A → B → C → D → E → F → G → H ✕ I J K L
+            A✔  B✔  C✔  D✔  E✔
+            
+A → B → C → D → E → F → G → H → J ✕ K L I
+            A✔  B✔  C✔  D✔  E✔  F✔
+            
+A → B → C → D → E → F → G → H → J → L ✕ I K
+            A✔  B✔  C✔  D✔  E✔  F✔  G✔
+            
+7 transactions completed (3 incomplete) | 83.33% redundancy
 ```
 
-When the transaction completes, Peer A receives _0.991 EMBR_, having paid _0.009 EMBR_ in consensus tax to Peers B, C, and D who received _0.005_, _0.003_, and _0.001 EMBR_ respectively. The initiator of a block (Peer A) is always the last peer who verifies it. So if Peers B, C, or D had tampered with the transaction payload at any point during consensus, Peer A would reject the block during its final validation, and could try again with different peers while that faulty block remains in a pending state, having insufficient consensus.
-
-To enforce randomness in finding peers, no two nodes can be involved in adjacent transactions. If Peer A from above wanted to initiate another transaction, Peers B, C, and D would be ineligible to echo it - and vice-versa - until after processing at least one other transaction involving other peers.
-
-Block consensus is one of many possible ways to establish redundancy - it's quick, anonymous, and automatic. Vendors can achieve higher levels of confidence however by scaling up the number of required peers, by requiring a minimum consensus tax amount, or by inventing special means of consensus or validation and enacting them through token contracts.
+In the above scenario, Peer A of a network of 12 peers (A-L) initiates a transaction, paying consensus tax to Peer B. Only 2 nodes refused consensus, completing the intial transaction along with 6 subsequent tax rewards.
 
 ## Trading
 
