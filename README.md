@@ -82,8 +82,7 @@ The initiating node offers consensus tax as incentive to another node to echo a 
 - Peer D offers Peer E _0.0005 EMBR_ to echo these transactions
 - Peer E echoes the transactions
 - (Peer B's transaction is now complete)
-- ...and so-on
-- 
+- ...
 
 ```
 A → B → C → D → E → F → G → H ✕ I J K L
