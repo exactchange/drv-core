@@ -93,10 +93,12 @@ A → B → C → D → E → F → G → H → J ✕ K L I
 A → B → C → D → E → F → G → H → J → L ✕ I K
             A✔  B✔  C✔  D✔  E✔  F✔  G✔
             
-7 transactions completed (3 incomplete) | 83.33% redundancy
+7 transactions completed (3 pending) | 83.33% redundancy
 ```
 
-In the above scenario, Peer A of a network of 12 peers (A-L) initiates a transaction, paying a small tax to Peer B. Peer B accepts and offers a cut of the tax to C who does the same with D, etc. each being incentivized to share witness of their receipt of payment. Only 2 nodes refused, completing the intial transaction along with 6 subsequent tax rewards. Nodes H, J, and L in this case miss out on what's left of the reward even though they accepted and completed the transaction, due to reaching the end of the eligible network (not enough eligible peers to echo it).
+### Pending & Completed
+
+In the above scenario, Peer A of a network of 12 peers (A-L) initiates a transaction, paying a small tax to Peer B. Peer B accepts and offers a cut of the tax to C who does the same with D, etc. each being incentivized to share witness of their receipt of payment. Only 2 nodes refuse, completing the intial transaction along with 6 subsequent tax rewards. Nodes H, J, and L in this case miss out on what's left of the reward even though they accepted and completed the transaction, due to reaching the end of the eligible network (not enough eligible peers to echo it). Their transactions remain recorded and count when calculating redundancy, but they'll remain in a pending state forever. Certain validations, directed by contracts, might view pending transactions differently, for example pending transactions might be counted in a balance inquiry involving a low-risk transaction under some contracts.
 
 ## Trading
 
