@@ -60,9 +60,15 @@ In order to make low-risk transactions fully-automatic, ML/AI and other forms of
 
 Enforcements are lifecycle hooks that run after a transaction has completed. The [Standard](https://github.com/exactchange/embercoin/blob/master/enforcements/enforcements.standard.js) enforcement included in this distribution ensures that a transaction is broadcasted to a list of peers for consensus.
 
-## Redundancy & Echo Fees
+## Redundancy
 
-Any node that processes peer transactions can be paid a percentage of the transaction amount called an echo fee, set by the initiator of the transaction. This small tax is a payment sent in the token being transferred, to a random node in exchange for their witness of the transaction, by validating and entering it into their own ledger. The fee is only paid if the transaction is successful (whether or not it's valid). The standard enforcement requires at least 4 peers to establish redundancy in order to move a transaction into the completed state, and to ensure randomness, no 2 nodes can request each other twice in a row. Transactions are propagated throughout the larger network in a cascading fashion: 4 peers are each paid to echo a transaction, but to receive that echo fee each peer needs to get another 4 peers to echo the echo fee, and so-on. Eventually all transactions are maximally redundant in the larger network. When the fee becomes diluted to effectively a zero amount, then there is no longer monetary incentive for peers to echo it, but some nodes offering free processing may still choose to.
+Any node that processes peer transactions can be paid a percentage of the transaction amount called an echo fee, set by the initiator of the transaction. This small tax is a payment sent in the token being transferred to a random node in exchange for their witness of the transaction, by validating and entering it into their own ledger. This process repeats until transactions are maximally redundant in the network. A fee is only paid if the transaction is successful (whether or not it's valid). 
+
+## Protocol
+
+In addition to requiring sufficient funds and other validations directed by contracts throughout the transaction, the protocol requires at least 4 peers to establish redundancy in order to view a transaction as completed. To ensure randomness, no 2 nodes could have requested each other twice in a row during consensus, such transactions would be deemed invalid according to the protocol.
+
+To summarize, the execution of specified contracts direct validations on incoming transactions, which are enforced and recorded by other peers in the network. Transactions are then read through the lens of the protocol, which yields their status and validity.
 
 ## Trading
 
