@@ -1,27 +1,5 @@
 # Embercoin Technical Overview
 
-## Coin or Token?
-
-In forking Embercoin, you are starting a new *coin* as defined by the following characteristics:
-
-1. It operates on its own [blockchain technology](https://github.com/exactchange/blockchain) that keeps track of all transactions in a cryptocurrency.
-
-    If you pay for something with Bitcoin, each transaction is encrypted, anonymized, and publicly viewable. Similarly, this blockchain implements a public API endpoint of publicly viewable, encrypted, anonymized transactions. Unlike Bitcoin, this blockchain also keeps track of all USD transactions associated with trading.
-
-2. It can be used as money.
-
-    The long-term vision of Bitcoin is to be used as a currency in the economy. Because trading with USD is built into Embercoin - even allowing trades to happen automatically, behind-the-scenes in occurrence with product sales - it is designed specifically for this purpose.
-
-3. It can be mined. So far there have been two primary mining methods used to increase the supply of coins in a network, they are:
-
-    • [Proof of Work](https://en.wikipedia.org/wiki/Proof_of_work)
-
-    • [Proof of Stake](https://en.wikipedia.org/wiki/Proof_of_stake)
-
-    Embercoin proposes a third method called *Proof of Value*, in which new coins are mined only when its value has been proven to have increased as a result of a trade or transaction. The newly mined coin is given to the seller as a reward for transacting in a way that increased its value.
-
-    The Reward Ceiling is adjusted by the overall dilutive effect of mining in order to minimize price volatility, with the goal being a coin whose value reflects its economic utility, leaving some room for trading (see *Deviation Rate* below), and a currency that prints itself only when necessary, becoming increasingly stable with each transaction.
-
 ## Features
 
 ### Proof of Value
