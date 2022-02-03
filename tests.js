@@ -1,4 +1,4 @@
-const { EMBR_TEXT } = require('./currency');
+const { DRV_TEXT } = require('./currency');
 
 const PASS = 'PASSED!';
 const FAIL = 'FAILED.';
@@ -11,13 +11,13 @@ const TEST_ADDRESS_1 = '11111111-1111-1111-1111-111111111111';
   Dependencies
   */
 
-  const embercoin = require('.');
+  const drv = require('.');
 
   const runTests = async () => {
     let data;
 
     try {
-      data = await embercoin.onHttpPost(
+      data = await drv.onHttpPost(
         {
           method: 'POST',
           path: 'transaction',
@@ -28,9 +28,9 @@ const TEST_ADDRESS_1 = '11111111-1111-1111-1111-111111111111';
             senderAddress: TEST_ADDRESS_0,
             recipientAddress: TEST_ADDRESS_1,
             tokenAddress: TEST_ADDRESS_1,
-            currency: EMBR_TEXT,
+            currency: DRV_TEXT,
             usdAmount: 1,
-            embrAmount: 1,
+            drvAmount: 1,
             isTest: true
           }
         },

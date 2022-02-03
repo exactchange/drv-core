@@ -1,5 +1,5 @@
 {
-  "name": "embercoin",
+  "name": "drv-core",
   "version": "1.3.2",
   "scripts": {
     "start": "node index",

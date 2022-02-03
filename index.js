@@ -71,13 +71,13 @@ require('dotenv').config();
         tokenAddress,
         currency,
         usdAmount,
-        embrAmount,
+        drvAmount,
         contract = 'standard',
         peers = [],
         isTest
       }) => {
         const usd = Math.max(1, usdAmount);
-        const embr = Math.max(0.0000000001, embrAmount);
+        const drv = Math.max(0.0000000001, drvAmount);
 
         const transaction = {
           hash: generateId(),
@@ -87,7 +87,7 @@ require('dotenv').config();
           tokenAddress,
           currency,
           usdAmount: usd,
-          embrAmount: embr
+          drvAmount: drv
         };
 
         const isValid = validations[contract](transaction);
@@ -105,7 +105,7 @@ require('dotenv').config();
         const transactions = transactionApi.getTransactions();
 
         if (transactions.find(({ hash }) => hash === transaction.hash)) {
-          console.log('<Embercoin> :: Transaction already exists. Skipping lifecycle, validation, & enforcements.');
+          console.log('<DRV> :: Transaction already exists. Skipping lifecycle, validation, & enforcements.');
 
           return { success: false };
         }

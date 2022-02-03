@@ -23,7 +23,7 @@ API.Price
 
   mongo(BLOCKCHAIN_MONGO_URI, async (error, client) => {
     if (error) {
-      console.log('<Embercoin> :: Database Error:', error);
+      console.log('<DRV> :: Database Error:', error);
 
       return;
     }
@@ -61,17 +61,17 @@ API.Price
         transactionsResult.forEach(({
           senderAddress,
           recipientAddress,
-          embrAmount,
+          drvAmount,
           currency
         }) => {
           if (currency === USD_TEXT) return;
 
           if (senderAddress === TREASURY_ADDRESS) {
-            inventory += embrAmount;
+            inventory += drvAmount;
           }
 
           if (recipientAddress === TREASURY_ADDRESS) {
-            inventory -= embrAmount;
+            inventory -= drvAmount;
           }
         });
 

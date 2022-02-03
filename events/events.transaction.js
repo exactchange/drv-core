@@ -3,8 +3,8 @@
  */
 
 const {
-  EMBR,
-  EMBR_TEXT,
+  DRV,
+  DRV_TEXT,
   USD,
   USD_TEXT,
   TREASURY_ADDRESS
@@ -21,7 +21,7 @@ const { generateId } = require('../algorithms');
   module.exports = ({ transactionApi, priceApi }) => {
     const onValueAssertion = async ({
       currency,
-      embrAmount,
+      drvAmount,
       usdAmount
     }) => {
       let price;
@@ -31,7 +31,7 @@ const { generateId } = require('../algorithms');
       const usdValue = parseFloat(
         Math.max(
           0.0000000001,
-          usdAmount / embrAmount
+          usdAmount / drvAmount
         )
       );
 
@@ -39,11 +39,11 @@ const { generateId } = require('../algorithms');
         price = usdValue;
 
         console.log(
-          `<Embercoin> :: A proof of value was asserted: "${embrAmount.toFixed(2)} ${EMBR} == ${usdAmount.toFixed(2)} ${USD}".`,
+          `<DRV> :: A proof of value was asserted: "${drvAmount.toFixed(2)} ${DRV} == ${usdAmount.toFixed(2)} ${USD}".`,
         );
       }
 
-      if (currency === EMBR_TEXT) {
+      if (currency === DRV_TEXT) {
         const priceDifference = parseFloat(
           Math.abs(apiPrice - usdValue)
         );
@@ -52,15 +52,15 @@ const { generateId } = require('../algorithms');
           price = usdValue;
 
           console.log(
-            `<Embercoin> :: A proof of value was asserted: "1.00 ${EMBR} == ${price.toFixed(2)} ${USD}".`,
+            `<DRV> :: A proof of value was asserted: "1.00 ${DRV} == ${price.toFixed(2)} ${USD}".`,
           );
         } else {
           console.log(
-            `<Embercoin> :: Assertion Rejected: ${embrAmount.toFixed(2)} ${EMBR} is not proven to be worth ${usdAmount.toFixed(2)} ${USD} within a standard deviation of 15%.`
+            `<DRV> :: Assertion Rejected: ${drvAmount.toFixed(2)} ${DRV} is not proven to be worth ${usdAmount.toFixed(2)} ${USD} within a standard deviation of 15%.`
           );
 
           console.log(
-            '<Embercoin> :: Correcting a misvaluation...'
+            '<DRV> :: Correcting a misvaluation...'
           );
 
           const modifier = (
@@ -75,7 +75,7 @@ const { generateId } = require('../algorithms');
           );
 
           console.log(
-            `<Embercoin> :: A corrected proof of value was asserted: "1.00 ${EMBR} == ${price.toFixed(2)} ${USD} (adjusted from ${usdValue.toFixed(2)} ${USD})".`,
+            `<DRV> :: A corrected proof of value was asserted: "1.00 ${DRV} == ${price.toFixed(2)} ${USD} (adjusted from ${usdValue.toFixed(2)} ${USD})".`,
           );
         }
       }
@@ -94,7 +94,7 @@ const { generateId } = require('../algorithms');
       tokenAddress,
       currency,
       usdAmount,
-      embrAmount,
+      drvAmount,
       status
     }) => {
       const currentPrice = await priceApi.getPrice();
@@ -108,7 +108,7 @@ const { generateId } = require('../algorithms');
         tokenAddress,
         currency,
         usdAmount,
-        embrAmount,
+        drvAmount,
         status,
         currentPrice,
         currentInventory: currentInventory
@@ -122,7 +122,7 @@ const { generateId } = require('../algorithms');
       const priceDifference = parseFloat(price - currentPrice);
 
       const reward = currency === USD_TEXT && priceDifference > 0 && (
-        parseFloat(priceDifference * .1 * embrAmount)
+        parseFloat(priceDifference * .1 * drvAmount)
       );
 
       if (reward) {
@@ -132,9 +132,9 @@ const { generateId } = require('../algorithms');
           senderAddress: TREASURY_ADDRESS,
           recipientAddress,
           tokenAddress: recipientAddress,
-          currency: EMBR_TEXT,
-          usdAmount: priceDifference * embrAmount,
-          embrAmount: reward,
+          currency: DRV_TEXT,
+          usdAmount: priceDifference * drvAmount,
+          drvAmount: reward,
           status,
           currentPrice,
           currentInventory

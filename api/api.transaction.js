@@ -24,7 +24,7 @@ API.Transaction
 
   mongo(BLOCKCHAIN_MONGO_URI, async (error, client) => {
     if (error) {
-      console.log('<Embercoin> :: Database Error:', error);
+      console.log('<DRV> :: Database Error:', error);
 
       return;
     }
@@ -39,7 +39,7 @@ API.Transaction
         : []
     );
 
-    console.log('<Embercoin> :: Transactions loaded.');
+    console.log('<DRV> :: Transactions loaded.');
   });
 
   /*
@@ -83,7 +83,7 @@ API.Transaction
       tokenAddress,
       currency,
       usdAmount,
-      embrAmount,
+      drvAmount,
       status,
       currentPrice,
       currentInventory
@@ -99,7 +99,7 @@ API.Transaction
         tokenAddress,
         currency,
         usdAmount,
-        embrAmount,
+        drvAmount,
         status,
         currentPrice,
         currentInventory
@@ -121,7 +121,7 @@ API.Transaction
       );
 
       console.log(
-        `<Embercoin> :: A transaction was added (paid in ${currency.toUpperCase()}).`,
+        `<DRV> :: A transaction was added (paid in ${currency.toUpperCase()}).`,
         tail.data
       );
 
@@ -132,7 +132,7 @@ API.Transaction
         );
 
         console.log(
-          `<Embercoin> :: The next hash of the previous transaction was updated.`,
+          `<DRV> :: The next hash of the previous transaction was updated.`,
           prev.data
         );
       }
