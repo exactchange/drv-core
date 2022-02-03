@@ -2,13 +2,120 @@
 
 ## Features
 
-### Proof of Value
+### WebSocket Relay (WSR) Protocol
+
+The new WSR protocol extends WS by introducing behavioral types for served content. Like with HTTP & WS, the transfer object is a message `string`, the format of which is defined by its respective Behavior & Content Types.
+
+**Behavior Types**
+
+- Save
+  - Default behavior for: \*
+  - Applies to: \*
+- View
+	- Default behavior for: media/jpg|png|svg|mp3|mp4, text/\*, interactive/html
+	- Applies to: \*
+- Run
+	- Default behavior for: interactive/rbx
+	- Applies to: media/\*, interactive/\*
+
+Syntax:
+```
+  type:<behavior_type>, data:<content_type>/<file_format>, <encoding>, <data>
+```
+
+Examples:
+```
+  type:save, data:unknown/zip; zip, 504b 0304 1400 0000 0000 ... e92c (download a file)
+  type:save, data:image/png; base64, iV00wANSggEUgAAggGGw0wKA ... A (download a file)
+
+  type:view, data:video/mp4; base64, iV0KAANSUhEUgAAggGGw0wKKUUA ... A (view in a player)
+  type:view, data:text/json; none, { "hello_world": "true" } (view in a text area)
+  type:view, data:text/html; none, <div>hello world</div> (view in a text area)
+  type:view, data:interactive/html; none, <div>hello world</div> (render HTML/CSS in a view area)
+
+  type:run, data:interactive/rbx; none, @head ... (run RBX code)
+  type:run, data:interactive/html; none, !doctype ... (run HTML/CSS/JS code)
+```
+
+**Content Types**
+
+```
+  interface Text {
+    value: string;
+    parent?: Text;
+  }
+
+  interface Namespace extends Text {
+    host: string;
+    port: number;
+  }
+
+  interface Copyright {
+    author: Namespace;
+    credits?: Copyright[];
+    timestamp: number;
+  }
+
+  interface Comment extends Text, Copyright {
+    likes: number;
+  }
+
+  interface Review extends Comment, Copyright {
+    rating: number;
+    reply?: Comment;
+  }
+
+  interface Article extends Comment, Copyright {
+    title: Text;
+    replies?: Comment[];
+  }
+
+  interface Media extends Copyright {
+    data: string | ArrayBuffer;
+    type: "Image" | "Video" | "Audio";
+  }
+
+  interface Sequence extends Copyright {
+    frames: Media[];
+    thumbnail: Media;
+  }
+
+  interface Stream extends Media {
+    connection: Namespace;
+  }
+```
+
+**WSR Request**
+
+```
+  interface WSRRequest {
+    node: Namespace;
+    service?: string;
+    action?: string;
+    argument?: string;
+  }
+```
+
+### Decentralized Record of Value (DRV) Protocol
+
+**DRV Request**
+
+```
+  interface DRVRequest {
+    senderAddress: string;
+    recipientAddress: string;
+    contract: "record" | "non-fungible record";
+    currency: "usd" | "drv";
+    usdValue?: Number;
+    drvValue?: Number | Text | Namespace | Copyright | Comment | Review | Article | Media | Sequence | Stream;
+  }
+```
 
 **Proof of Value Assertions**
 
-A *Proof of Value* is asserted whenever DRV is shown to have some value. The simplest example of this is when someone trades USD for DRV. For example, if you spend 10.00 USD for 1 DRV, a value of 10.00 USD is asserted in the blockchain and worked into its subsequent valuation.
+A *Proof of Value* is asserted whenever DRV is asserted to have some USD value. The simplest example of this is when someone trades USD for DRV. For example, if you spend 10.00 USD for 1 DRV, a value of 10.00 USD is asserted in the blockchain.
 
-Another way to assert value is to sell a product normally purchased in USD in DRV. Let's say you've sold a number of products online for 10.00 USD each, and now you want to accept crypto payments. For every sale where you accept DRV as payment, value will be asserted for the sale amount and worked into the valuation.
+Another way to assert value is to sell a product normally purchased in USD in DRV. Let's say you've sold a number of products online for 10.00 USD each, and now you want to accept crypto payments. For every sale where you accept DRV as payment, value will be asserted for the sale amount.
 
 Proof of Value occurs in the [`onTransaction`](./events/events.transaction.js) lifecycle method, which is invoked after the transaction has been inserted into the blockchain. If the value increased as a result of the transaction, a reward is mined (see *Transaction Rewards* below), and `onTransaction` is recursively called with the reward amount.
 
@@ -29,7 +136,7 @@ A Proof of Value Assertion will be rejected if the assertion exceeds the Deviati
     );
     ```
 
-2. The difference between the DRV `price` and the adjusted `usdValue` must not exceed a Standard Deviation of the average price (see *Deviation Rate* below).
+2. The difference between the DRV `price` and the adjusted `usdValue` must not exceed a Standard Deviation of the average price.
 
     ```
     // ./events/events.transaction.js
@@ -44,15 +151,15 @@ A Proof of Value Assertion will be rejected if the assertion exceeds the Deviati
       ...
     ```
 
-Misvaluations and Rejections are *automatically corrected* in the blockchain and the valuation is re-submitted within the Deviation Rate (see *Deviation Rate* below).
+Misvaluations and Rejections are *automatically corrected* in the blockchain and the valuation is re-submitted within the Deviation Rate.
 
-**Transaction Rewards & dilution**
+**Transaction Rewards & Dilution**
 
-A Proof of Value Assertion that results in a price increase self-mitigates potential volatility through automatic dilution - by increasing the supply of crypto and rewarding it to the seller. This creates a situation where miners (sellers) are rewarded for their contributions only when they add value, creating incentive to do so and minimizing overall dilutive effect.
+A Proof of Value Assertion that results in a price increase self-mitigates potential volatility through automatic dilution - by increasing the supply of crypto and rewarding it to the seller. This creates a situation where miners (token vendors) are rewarded for their contributions only when they add value, creating incentive to do so and minimizing overall dilutive effect.
 
 **Reward Ceiling**
 
-Rewards are always mined at the current value of DRV, and therefore cannot generate further rewards. Because the reward is a recursive call of `onTransaction` (invoked within `onTransaction`) the concept of rewards deriving from other rewards isn't technically feasable, as it would cause an infinite loop in `onTransaction` and crash the blockchain. This creates a natural Reward Ceiling that minimizes dilution and volatility associated with mining:
+Rewards are always mined at the current value of DRV, and therefore cannot compound further rewards. Because the reward is a recursive call of `onTransaction` (invoked within `onTransaction`) the concept of rewards deriving from other rewards isn't technically feasable, as it would cause an infinite loop in `onTransaction` and crash the blockchain. This creates a natural Reward Ceiling that minimizes dilution and volatility associated with mining:
 
 ```
 // ./events/events.transaction.js
@@ -77,7 +184,7 @@ if (reward) {
 
 **Long-term stability**
 
-The weight of each Proof of Value Assertion depends on the number of total transactions: For example a blockchain with millions of recorded transactions will have a much stabler valuation (trading price) than a blockchain with only a few.
+The weight of each Proof of Value Assertion depends on the number of total transactions: For example a blockchain with millions of records will have a much stabler valuation (trading price) than a blockchain with only a few.
 
 **Deviation Rate**
 
@@ -89,7 +196,7 @@ const deviationRate = priceApi.price * .15;
 
 **Crypto trading**
 
-As a merchant or trader, you can assert any value you want, but if your assertion exceeds the Deviation Rate, the proof is rejected, corrected, and re-submitted at the Maximum Allowable Deviation. For example, if you sell 1 DRV valued at 10.00 USD for only 0.01 USD, the transaction will succeed, but will result in a misvaluation, and the blockchain will re-attempt valuing the transaction at the minimum value allowed (in this case 8.50 USD). If it's valued too high, for example 1 DRV valued at 10.00 USD is sold for 100.00 USD, it will attempt to value it at the highest possible amount (in this case 11.50), as shown:
+As a merchant or trader, you can assert any value you want, but if your assertion exceeds the Deviation Rate, the proof is rejected, corrected, and re-submitted at the Maximum Allowable Deviation. For example, if you sell 1 DRV valued at 10.00 USD for only 0.01 USD, the transaction will succeed, but will result in a misvaluation, and the blockchain will re-attempt valuing it at the minimum value allowed (in this case 8.50 USD). If it's valued too high, for example 1 DRV valued at 10.00 USD is sold for 100.00 USD, it will attempt to value it at the highest possible amount (in this case 11.50), as shown:
 
 ```
 // ./events/events.transaction.js
