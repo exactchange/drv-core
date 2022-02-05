@@ -70,7 +70,7 @@ API.Price
           }
         });
 
-        return inventory;
+        return inventory || 0;
       }
     };
 
@@ -78,7 +78,10 @@ API.Price
       const inventory = await getInventory();
       const price = await getPrice();
 
-      return (inventory * parseFloat(price)).toFixed(2);
+      return Math.max(
+        0.01,
+        (inventory * parseFloat(price)).toFixed(2)
+      ) || 0.01;
     };
 
     return {
