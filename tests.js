@@ -1,5 +1,3 @@
-const { DRV_TEXT } = require('./currency');
-
 const PASS = 'PASSED!';
 const FAIL = 'FAILED.';
 const TEST_ADDRESS_0 = '00000000-0000-0000-0000-000000000000';
@@ -27,8 +25,6 @@ const TEST_ADDRESS_1 = '11111111-1111-1111-1111-111111111111';
           body: {
             senderAddress: TEST_ADDRESS_0,
             recipientAddress: TEST_ADDRESS_1,
-            tokenAddress: TEST_ADDRESS_1,
-            currency: DRV_TEXT,
             usdAmount: 1,
             drvAmount: 1,
             isTest: true

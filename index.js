@@ -12,6 +12,8 @@ require('dotenv').config();
 
   const { http } = require('node-service-client');
   const { BAD_REQUEST } = require('./errors');
+  const { ZERO } = require('./numbers');
+  const { RECORD, NON_FUNGIBLE_RECORD } = require('./strings');
 
   /*
   Backend
@@ -40,7 +42,7 @@ require('dotenv').config();
       ))
       .pop();
 
-    return transaction && transaction.currentPrice;
+    return transaction && transaction.price;
   };
 
   /*
@@ -68,26 +70,30 @@ require('dotenv').config();
       transaction: async ({
         senderAddress,
         recipientAddress,
-        tokenAddress,
-        currency,
-        usdAmount,
-        drvAmount,
-        contract = 'standard',
+        usdValue,
+        drvValue,
+        contract = RECORD,
         peers = [],
-        isTest
+        isTest = false
       }) => {
-        const usd = Math.max(1, usdAmount);
-        const drv = Math.max(0.0000000001, drvAmount);
+        const usd = Math.max(1, usdValue);
+
+        if (typeof(drvValue) === 'number') {
+          contract = NON_FUNGIBLE_RECORD;
+        }
+
+        const drv = contract === NON_FUNGIBLE_RECORD
+          ? drvValue
+          : Math.max(ZERO, drvValue);
 
         const transaction = {
           hash: generateId(),
           next: '',
           senderAddress,
           recipientAddress,
-          tokenAddress,
-          currency,
-          usdAmount: usd,
-          drvAmount: drv
+          contract,
+          usdValue: usd,
+          drvValue: drv
         };
 
         const isValid = validations[contract](transaction);
@@ -110,7 +116,7 @@ require('dotenv').config();
           return { success: false };
         }
 
-        transaction.status = await enforcements.standard(transaction, peers);
+        transaction.status = await enforcements.broadcast(transaction, peers);
 
         const result = await transactionEvents.onTransaction(transaction);
 

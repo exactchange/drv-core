@@ -1,5 +1,5 @@
 /*
-Enforcements.Standard
+Enforcements.Broadcast
  */
 
 const fetch = require('node-fetch-commonjs');

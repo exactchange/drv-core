@@ -1,5 +1,5 @@
-const standard = require('./enforcements.standard');
+const broadcast = require('./enforcements.broadcast');
 
 module.exports = {
-  standard
+  broadcast
 };

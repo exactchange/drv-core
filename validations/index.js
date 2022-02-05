@@ -1,7 +1,7 @@
-const standard = require('./validations.standard');
-const exchange = require('./validations.exchange');
+const record = require('./validations.record');
+const nonFungibleRecord = require('./validations.non-fungible-record');
 
 module.exports = {
-  standard,
-  exchange
+  record,
+  nonFungibleRecord
 };

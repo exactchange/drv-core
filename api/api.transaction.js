@@ -4,10 +4,13 @@ API.Transaction
 
 (() => {
   const mongo = require('../mongo');
+  const { TREASURY_ADDRESS } = require('../strings');
+  const { generateId } = require('../algorithms');
 
   const {
     BLOCKCHAIN_DB_NAME,
-    BLOCKCHAIN_MONGO_URI
+    BLOCKCHAIN_MONGO_URI,
+    TOKEN_ADDRESS
   } = process.env;
 
   /*
@@ -20,7 +23,20 @@ API.Transaction
   Database
   */
 
-  let db, transactions;
+  let db, transactions = new LinkedList([
+    {
+      timestamp: Date.now(),
+      hash: generateId(),
+      next: '',
+      senderAddress: TREASURY_ADDRESS,
+      recipientAddress: TOKEN_ADDRESS,
+      contract: 'record',
+      usdValue: 0.00,
+      drvValue: 1.00,
+      status: 'complete',
+      price: 0.00
+    }
+  ]);
 
   mongo(BLOCKCHAIN_MONGO_URI, async (error, client) => {
     if (error) {
@@ -33,11 +49,9 @@ API.Transaction
 
     const dbTransactionResult = await db.collection('transactions').find().toArray();
 
-    transactions = new LinkedList(
-      dbTransactionResult.length
-        ? dbTransactionResult
-        : []
-    );
+    if (dbTransactionResult.length) {
+      dbTransactionResult.forEach(transactions.add);
+    }
 
     console.log('<DRV> :: Transactions loaded.');
   });
@@ -80,13 +94,11 @@ API.Transaction
       next,
       senderAddress,
       recipientAddress,
-      tokenAddress,
-      currency,
-      usdAmount,
-      drvAmount,
+      contract,
+      usdValue,
+      drvValue,
       status,
-      currentPrice,
-      currentInventory
+      price
     }) => {
       if (!transactions) return;
 
@@ -96,13 +108,11 @@ API.Transaction
         next,
         senderAddress,
         recipientAddress,
-        tokenAddress,
-        currency,
-        usdAmount,
-        drvAmount,
+        contract,
+        usdValue,
+        drvValue,
         status,
-        currentPrice,
-        currentInventory
+        price
       };
 
       transactions.add(transaction);
@@ -121,7 +131,7 @@ API.Transaction
       );
 
       console.log(
-        `<DRV> :: A transaction was added (paid in ${currency.toUpperCase()}).`,
+        `<DRV> :: A transaction was added.`,
         tail.data
       );
 

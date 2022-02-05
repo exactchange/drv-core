@@ -3,10 +3,7 @@ API.Price
  */
 
 (() => {
-  const {
-    USD_TEXT,
-    TREASURY_ADDRESS
-  } = require('../currency');
+  const { TREASURY_ADDRESS } = require('../strings');
 
   /*
   Database
@@ -40,7 +37,7 @@ API.Price
       const transactionsResult = await db.collection('transactions').find().toArray();
 
       if (transactionsResult.length) {
-        const prices = transactionsResult.map(({ currentPrice }) => currentPrice);
+        const prices = transactionsResult.map(({ price }) => price);
 
         const averagePrice = prices.length < 2
           ? prices[0]
@@ -61,10 +58,8 @@ API.Price
         transactionsResult.forEach(({
           senderAddress,
           recipientAddress,
-          drvAmount,
-          currency
+          drvAmount
         }) => {
-          if (currency === USD_TEXT) return;
 
           if (senderAddress === TREASURY_ADDRESS) {
             inventory += drvAmount;
