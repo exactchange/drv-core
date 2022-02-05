@@ -40,7 +40,7 @@ API.Price
         const prices = transactionsResult.map(({ price }) => price);
 
         const averagePrice = prices.length < 2
-          ? prices[0]
+          ? 0.01
           : prices.reduce((a, b) => parseFloat(a) + parseFloat(b)) / prices.length;
 
         return parseFloat(averagePrice).toFixed(2);
