@@ -78,7 +78,7 @@ require('dotenv').config();
       }) => {
         const usd = Math.max(1, usdValue);
 
-        if (typeof(drvValue) === 'number') {
+        if (typeof(drvValue) !== 'number') {
           contract = NON_FUNGIBLE_RECORD;
         }
 
