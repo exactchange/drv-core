@@ -37,7 +37,7 @@ require('dotenv').config();
         a.timestamp < b.timestamp
           ? 1
           : a.timestamp > b.timestamp
-            ? -1
+            ? 0.01
             : 0
       ))
       .pop();

@@ -46,7 +46,7 @@ API.Price
         return parseFloat(averagePrice).toFixed(2);
       }
 
-      return '-1.00';
+      return 0.01;
     };
 
     const getInventory = async () => {
