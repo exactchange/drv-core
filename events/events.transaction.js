@@ -94,7 +94,8 @@ const { generateId } = require('../algorithms');
       contract,
       usdValue,
       drvValue,
-      status
+      status,
+      isReward = false
     }) => {
       const currentPrice = await priceApi.getPrice();
 
@@ -121,15 +122,17 @@ const { generateId } = require('../algorithms');
         parseFloat(priceDifference * .1 * drvValue)
       );
 
-      if (reward) {
+      if (!isReward && reward) {
         await onTransaction({
           hash: generateId(),
           next: '',
           senderAddress: TREASURY_ADDRESS,
           recipientAddress,
+          contract,
           usdValue: priceDifference * drvValue,
           drvValue: reward,
-          status
+          status,
+          isReward: true
         });
       }
 
