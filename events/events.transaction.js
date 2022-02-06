@@ -51,7 +51,7 @@ const { generateId } = require('../algorithms');
 
       if (isMisvaluation) {
         console.log(
-          `<DRV> :: Assertion Rejected: ${drvValue.toFixed(2)} ${DRV} is not proven to be worth ${usdValue.toFixed(2)} ${USD} within a standard deviation of 15%.`
+          `<DRV> :: Assertion Rejected: ${drvValue.toFixed(2)} ${DRV} is not proven to be worth ${(usdValue / drvValue).toFixed(2)} ${USD} within a standard deviation of 15%.`
         );
 
         console.log(
