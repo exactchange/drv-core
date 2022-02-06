@@ -36,9 +36,9 @@ When performing a basic balance inquiry or when transferring DRV to another user
 
 Contracts are agreements between participants in a transaction that are specified in the request by their string name (e.g. `{ contract: "non-fungible record" }`). Currently there are 2 kinds of contracts:
 
-**[Record]**
+**Record**
 
-**[Non-Fungible Record]**
+**Non-Fungible Record**
 
 Contracts can encompass just one, or many transactions, and even establish long-term payment schedules involving various layers of validation and user interaction.
 
@@ -46,10 +46,9 @@ Contracts can encompass just one, or many transactions, and even establish long-
 
 Validations are lifecycle hooks that run before a transaction is completed, and their `Boolean` return value determines whether or not the transaction will continue. Currently there are 2 kinds of validations:
 
-
 ## Enforcements
 
-Enforcements are lifecycle hooks that run after a transaction has completed. The [Record](https://github.com/exactchange/drv-core/blob/master/enforcements/enforcements.standard.js) enforcement included in this distribution ensures that a transaction is broadcasted to a list of peers for consensus.
+Enforcements are lifecycle hooks that run after a transaction has completed. The [Broadcast](https://github.com/exactchange/drv-core/blob/master/enforcements/enforcements.broadcast.js) enforcement included in this distribution ensures that a transaction is broadcasted to a list of peers for consensus.
 
 ## Redundancy
 
