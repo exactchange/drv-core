@@ -124,8 +124,7 @@ require('dotenv').config();
           return { success: false };
         }
 
-        const price = await priceApi.getPrice();
-        const price24hAgo = await getPrice24hAgo() || price;
+        const price24hAgo = await getPrice24hAgo() || result.price;
 
         return {
           ...result,

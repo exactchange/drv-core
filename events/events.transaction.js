@@ -33,14 +33,10 @@ const { generateId } = require('../algorithms');
 
       const apiPrice = await priceApi.getPrice();
 
-      usdValue = parseFloat(
+      usdValue = !isFungible ? usdValue : parseFloat(
         Math.max(
           ZERO,
-          usdValue / (
-            isFungible
-              ? drvValue
-              : ZERO
-          )
+          usdValue / drvValue
         )
       );
 
@@ -104,7 +100,7 @@ const { generateId } = require('../algorithms');
       status,
       isReward = false
     }) => {
-      const currentPrice = await priceApi.getPrice();
+      let currentPrice = await priceApi.getPrice();
 
       const transaction = {
         hash,
@@ -143,11 +139,13 @@ const { generateId } = require('../algorithms');
         });
       }
 
+      currentPrice = await priceApi.getPrice();
+
       const marketCap = await priceApi.getMarketCap();
 
       return {
         success,
-        price,
+        price: currentPrice,
         marketCap,
         reward
       };
