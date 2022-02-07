@@ -11,7 +11,7 @@ const {
   DRV,
   USD,
   TREASURY_ADDRESS,
-  NON_FUNGIBLE_RECORD
+  RECORD
 } = require('../strings');
 
 const { generateId } = require('../algorithms');
@@ -29,6 +29,7 @@ const { generateId } = require('../algorithms');
       usdValue
     }) => {
       let price;
+      const isFungible = contract === RECORD;
 
       const apiPrice = await priceApi.getPrice();
 
@@ -36,9 +37,9 @@ const { generateId } = require('../algorithms');
         Math.max(
           ZERO,
           usdValue / (
-            contract === NON_FUNGIBLE_RECORD
-              ? ZERO
-              : drvValue
+            isFungible
+              ? drvValue
+              : ZERO
           )
         )
       );
@@ -50,9 +51,15 @@ const { generateId } = require('../algorithms');
       const isMisvaluation = priceDifference > (apiPrice * STANDARD_DEVIATION);
 
       if (isMisvaluation) {
-        console.log(
-          `<DRV> :: Assertion Rejected: ${drvValue.toFixed(2)} ${DRV} is not proven to be worth ${(usdValue / drvValue).toFixed(2)} ${USD} within a standard deviation of 15%.`
-        );
+        if (isFungible) {
+          console.log(
+            `<DRV> :: Assertion Rejected: ${drvValue.toFixed(2)} ${DRV} is not proven to be worth ${(usdValue / drvValue).toFixed(2)} ${USD} within a standard deviation of 15%.`
+          );
+        } else {
+          console.log(
+            '<DRV> :: Assertion Rejected: The content is not proven to be worth the USD value within a standard deviation of 15%.'
+          );
+        }
 
         console.log(
           '<DRV> :: Correcting a misvaluation...'
