@@ -34,7 +34,7 @@ When performing a basic balance inquiry or when transferring DRV to another user
 
 ## Contracts
 
-Contracts are agreements between participants in a transaction that are specified in the request by their string name (e.g. `{ contract: "non-fungible record" }`). Currently there are 2 kinds of contracts:
+Contracts are agreements between participants in a transaction that are specified in the request by their string name (e.g. `{ contract: "nonFungibleRecord" }`). Currently there are 2 kinds of contracts:
 
 **Record**
 
