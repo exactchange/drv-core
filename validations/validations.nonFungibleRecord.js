@@ -1,5 +1,5 @@
 /*
-Validations.non-fungible-record
+Validations.nonFungibleRecord
  */
 
 module.exports = ({
