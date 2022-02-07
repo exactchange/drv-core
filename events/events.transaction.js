@@ -33,23 +33,22 @@ const { generateId } = require('../algorithms');
 
       const apiPrice = await priceApi.getPrice();
 
-      usdValue = !isFungible ? usdValue : parseFloat(
+      const assertedPrice = !isFungible ? usdValue : parseFloat(
         Math.max(
           ZERO,
           usdValue / drvValue
         )
       );
 
-      const priceDifference = parseFloat(
-        Math.abs(apiPrice - usdValue)
+      const isMisvaluation = (
+        assertedPrice > (apiPrice + (apiPrice * STANDARD_DEVIATION)) ||
+        assertedPrice < (apiPrice - (apiPrice * STANDARD_DEVIATION))
       );
-
-      const isMisvaluation = priceDifference > (apiPrice * STANDARD_DEVIATION);
 
       if (isMisvaluation) {
         if (isFungible) {
           console.log(
-            `<DRV> :: Assertion Rejected: ${drvValue.toFixed(2)} ${DRV} is not proven to be worth ${(usdValue / drvValue).toFixed(2)} ${USD} within a standard deviation of ${STANDARD_DEVIATION * 100}%.`
+            `<DRV> :: Assertion Rejected: ${drvValue.toFixed(2)} ${DRV} is not proven to be worth ${(usdValue).toFixed(2)} ${USD} within a standard deviation of ${STANDARD_DEVIATION * 100}%.`
           );
         } else {
           console.log(
@@ -62,7 +61,7 @@ const { generateId } = require('../algorithms');
         );
 
         const modifier = (
-          usdValue < apiPrice
+          assertedPrice < apiPrice
             ? (STANDARD_DEVIATION * -1)
             : STANDARD_DEVIATION
         );
@@ -73,7 +72,7 @@ const { generateId } = require('../algorithms');
         );
 
         console.log(
-          `<DRV> :: A corrected proof of value was asserted: "1.00 ${DRV} == ${price.toFixed(2)} ${USD} (adjusted from ${usdValue.toFixed(2)} ${USD})".`,
+          `<DRV> :: A corrected proof of value was asserted: "1.00 ${DRV} == ${price.toFixed(2)} ${USD} (adjusted from ${assertedPrice.toFixed(2)} ${USD})".`,
         );
       } else {
         price = usdValue;
