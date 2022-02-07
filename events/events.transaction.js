@@ -53,11 +53,11 @@ const { generateId } = require('../algorithms');
       if (isMisvaluation) {
         if (isFungible) {
           console.log(
-            `<DRV> :: Assertion Rejected: ${drvValue.toFixed(2)} ${DRV} is not proven to be worth ${(usdValue / drvValue).toFixed(2)} ${USD} within a standard deviation of 15%.`
+            `<DRV> :: Assertion Rejected: ${drvValue.toFixed(2)} ${DRV} is not proven to be worth ${(usdValue / drvValue).toFixed(2)} ${USD} within a standard deviation of ${STANDARD_DEVIATION * 100}%.`
           );
         } else {
           console.log(
-            '<DRV> :: Assertion Rejected: The content is not proven to be worth the USD value within a standard deviation of 15%.'
+            `<DRV> :: Assertion Rejected: The content is not proven to be worth ${usdValue} ${USD} within a standard deviation of ${STANDARD_DEVIATION * 100}%.`
           );
         }
 
