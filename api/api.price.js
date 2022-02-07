@@ -58,15 +58,17 @@ API.Price
         transactionsResult.forEach(({
           senderAddress,
           recipientAddress,
-          drvAmount
+          contract,
+          drvValue
         }) => {
+          if (contract === 'nonFungibleRecord') return;
 
           if (senderAddress === TREASURY_ADDRESS) {
-            inventory += drvAmount;
+            inventory += drvValue;
           }
 
           if (recipientAddress === TREASURY_ADDRESS) {
-            inventory -= drvAmount;
+            inventory -= drvValue;
           }
         });
 
