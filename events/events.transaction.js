@@ -41,8 +41,8 @@ const { generateId } = require('../algorithms');
       );
 
       const isMisvaluation = (
-        assertedPrice > (apiPrice + (apiPrice * STANDARD_DEVIATION)) ||
-        assertedPrice < (apiPrice - (apiPrice * STANDARD_DEVIATION))
+        assertedPrice > (parseFloat(apiPrice) + (apiPrice * STANDARD_DEVIATION)) ||
+        assertedPrice < (parseFloat(apiPrice) - (apiPrice * STANDARD_DEVIATION))
       );
 
       if (isMisvaluation) {
@@ -109,16 +109,18 @@ const { generateId } = require('../algorithms');
         contract,
         usdValue,
         drvValue,
-        price: currentPrice,
         status
       };
+
+      const { price } = await onValueAssertion(transaction);
+
+      transaction.price = price;
 
       const success = await transactionApi.createTransaction(transaction);
 
       if (!success) return;
 
-      const { price } = await onValueAssertion(transaction);
-      const priceDifference = parseFloat(price - currentPrice);
+      const priceDifference = parseFloat(price - parseFloat(currentPrice));
 
       const reward = priceDifference > 0 && (
         parseFloat(priceDifference * .1 * drvValue)
@@ -129,7 +131,7 @@ const { generateId } = require('../algorithms');
           hash: generateId(),
           next: '',
           senderAddress: TREASURY_ADDRESS,
-          recipientAddress,
+          recipientAddress: senderAddress,
           contract,
           usdValue: priceDifference * drvValue,
           drvValue: reward,
@@ -138,13 +140,11 @@ const { generateId } = require('../algorithms');
         });
       }
 
-      currentPrice = await priceApi.getPrice();
-
       const marketCap = await priceApi.getMarketCap();
 
       return {
         success,
-        price: currentPrice,
+        price,
         marketCap,
         reward
       };

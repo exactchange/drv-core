@@ -39,11 +39,13 @@ API.Price
       if (transactionsResult.length) {
         const prices = transactionsResult.map(({ price }) => price);
 
+        console.log(prices)
+
         const averagePrice = prices.length < 2
           ? 0.01
           : prices.reduce((a, b) => parseFloat(a) + parseFloat(b)) / prices.length;
 
-        return parseFloat(averagePrice).toFixed(2);
+        return parseFloat(averagePrice).toFixed(10);
       }
 
       return 0.01;
