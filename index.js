@@ -87,8 +87,8 @@ require('dotenv').config();
           : Math.max(ZERO, drvValue);
 
         const transaction = {
-          hash: generateId(),
-          next: '',
+          hash: transactionApi.getTransactions().pop().next,
+          next: generateId(),
           senderAddress,
           recipientAddress,
           contract,

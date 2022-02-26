@@ -28,7 +28,7 @@ API.Transaction
     {
       timestamp: Date.now(),
       hash: generateId(),
-      next: '',
+      next: generateId(),
       senderAddress: TREASURY_ADDRESS,
       recipientAddress: TOKEN_ADDRESS,
       contract: 'record',
@@ -118,13 +118,10 @@ API.Transaction
 
       transactions.add(transaction);
 
-      let prev, tail = transactions.head;
+      let tail = transactions.head;
 
       while (tail.next) {
-        prev = tail;
         tail = tail.next;
-
-        prev.data.next = tail.data.hash;
       }
 
       await db.collection('transactions').insertOne(
@@ -135,18 +132,6 @@ API.Transaction
         `<DRV> :: A transaction was added.`,
         tail.data
       );
-
-      if (prev) {
-        await db.collection('transactions').updateOne(
-          { hash: prev.data.hash },
-          { $set: { next: prev.data.next } }
-        );
-
-        console.log(
-          `<DRV> :: The next hash of the previous transaction was updated.`,
-          prev.data
-        );
-      }
 
       return true;
     }

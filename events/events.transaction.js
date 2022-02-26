@@ -128,8 +128,8 @@ const { generateId } = require('../algorithms');
 
       if (!isReward && reward) {
         await onTransaction({
-          hash: generateId(),
-          next: '',
+          hash: transactionApi.getTransactions().pop().next,
+          next: generateId(),
           senderAddress: TREASURY_ADDRESS,
           recipientAddress: senderAddress,
           contract,
