@@ -4,6 +4,7 @@ API.Price
 
 (() => {
   const { TREASURY_ADDRESS } = require('../strings');
+  const { ROOT_VALUE } = require('../numbers');
 
   /*
   Database
@@ -39,21 +40,22 @@ API.Price
       if (transactionsResult.length) {
         const prices = transactionsResult.map(({ price }) => price);
 
-        const averagePrice = prices.length < 2
-          ? 0.01
-          : prices.reduce((a, b) => parseFloat(a) + parseFloat(b)) / prices.length;
+        const averagePrice = (
+          prices.reduce((a = 0.01, b = 0.01) => parseFloat(a) + parseFloat(b)) / prices.length
+        );
 
         return parseFloat(averagePrice).toFixed(10);
       }
 
-      return 0.01;
+      return ROOT_VALUE;
     };
 
     const getInventory = async () => {
+      let inventory = 1;
+
       const transactionsResult = await db.collection('transactions').find().toArray();
 
       if (transactionsResult.length) {
-        let inventory = 1;
 
         transactionsResult.forEach(({
           senderAddress,
@@ -71,9 +73,9 @@ API.Price
             inventory -= drvValue;
           }
         });
-
-        return inventory || 0;
       }
+
+      return inventory;
     };
 
     const getMarketCap = async () => {
@@ -83,7 +85,7 @@ API.Price
       return Math.max(
         0.01,
         (inventory * parseFloat(price)).toFixed(2)
-      ) || 0.01;
+      );
     };
 
     return {

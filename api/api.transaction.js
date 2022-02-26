@@ -5,6 +5,7 @@ API.Transaction
 (() => {
   const mongo = require('../mongo');
   const { TREASURY_ADDRESS } = require('../strings');
+  const { ROOT_VALUE } = require('../numbers');
   const { generateId } = require('../algorithms');
 
   const {
@@ -31,10 +32,10 @@ API.Transaction
       senderAddress: TREASURY_ADDRESS,
       recipientAddress: TOKEN_ADDRESS,
       contract: 'record',
-      usdValue: 0.00,
+      usdValue: ROOT_VALUE,
       drvValue: 1.00,
       status: 'complete',
-      price: 0.00
+      price: ROOT_VALUE
     }
   ]);
 
