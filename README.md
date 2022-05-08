@@ -62,4 +62,4 @@ Special kinds of tokens may emerge for trading purposes where the token is not a
 
 ## Anonymous Tokens
 
-An anonymous token is any DRV amount accounted for by a blockchain participant where the participant does not host their own instance of `drv-core`, and is not broadcasting anything from an `/info` NET endpoint about their token name, logo, or denomination.
+An anonymous token is any DRV amount accounted for by a blockchain participant where the participant does not host their own instance of `drv-core`, and is not broadcasting anything from an `/info` endpoint about their token name, logo, or denomination.
