@@ -3,15 +3,14 @@ API.Transaction
  */
 
 (() => {
+  const { TOKEN_ADDRESS } = process.env;
   const { TREASURY_ADDRESS } = require('../strings');
   const { ROOT_VALUE } = require('../numbers');
   const { generateId } = require('../algorithms');
+  const db = require('../data');
 
-  const {
-    BLOCKCHAIN_DB_NAME,
-    BLOCKCHAIN_MONGO_URI,
-    TOKEN_ADDRESS
-  } = process.env;
+  let transactions;
+
 
   /*
   Dependencies
@@ -20,13 +19,12 @@ API.Transaction
   const { LinkedList } = require('crypto-linked-list');
 
   (async () => {
+
     /*
     Database
     */
 
-    const db = require('../data');
-
-    let transactions = new LinkedList([
+    transactions = new LinkedList([
       {
         timestamp: Date.now(),
         hash: generateId(),
