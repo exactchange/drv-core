@@ -19,7 +19,7 @@ API.Price
   module.exports = () => {
     const getPrice = async () => {
       let transactionsResult = await db.read('transactions');
-      transactionResult = transactionResult.data;
+      transactionsResult = transactionsResult.data;
 
       if (transactionsResult.length) {
         const prices = transactionsResult.map(({ price }) => price);
@@ -38,7 +38,7 @@ API.Price
       let inventory = 1;
 
       let transactionsResult = await db.read('transactions')
-      transactionResult = dbTransactionResult.data;
+      transactionsResult = transactionsResult.data;
 
       if (transactionsResult.length) {
 
