@@ -3,7 +3,6 @@ API.Transaction
  */
 
 (() => {
-  const mongo = require('../mongo');
   const { TREASURY_ADDRESS } = require('../strings');
   const { ROOT_VALUE } = require('../numbers');
   const { generateId } = require('../algorithms');
@@ -20,42 +19,37 @@ API.Transaction
 
   const { LinkedList } = require('crypto-linked-list');
 
-  /*
-  Database
-  */
+  (async () => {
+    /*
+    Database
+    */
 
-  let db, transactions = new LinkedList([
-    {
-      timestamp: Date.now(),
-      hash: generateId(),
-      next: generateId(),
-      senderAddress: TREASURY_ADDRESS,
-      recipientAddress: TOKEN_ADDRESS,
-      contract: 'record',
-      usdValue: ROOT_VALUE,
-      drvValue: 1.00,
-      status: 'complete',
-      price: ROOT_VALUE
-    }
-  ]);
+    const db = require('../data');
 
-  mongo(BLOCKCHAIN_MONGO_URI, async (error, client) => {
-    if (error) {
-      console.log('<DRV> :: Database Error:', error);
+    let transactions = new LinkedList([
+      {
+        timestamp: Date.now(),
+        hash: generateId(),
+        next: generateId(),
+        senderAddress: TREASURY_ADDRESS,
+        recipientAddress: TOKEN_ADDRESS,
+        contract: 'record',
+        usdValue: ROOT_VALUE,
+        drvValue: 1.00,
+        status: 'complete',
+        price: ROOT_VALUE
+      }
+    ]);
 
-      return;
-    }
-
-    db = client.db(BLOCKCHAIN_DB_NAME);
-
-    const dbTransactionResult = await db.collection('transactions').find().toArray();
+    let dbTransactionResult = await db.read('transactions')
+    dbTransactionResult = dbTransactionResult.data;
 
     if (dbTransactionResult.length) {
       dbTransactionResult.forEach(transactions.add);
     }
 
     console.log('<DRV> :: Transactions loaded.');
-  });
+  })();
 
   /*
   Exports
@@ -124,9 +118,7 @@ API.Transaction
         tail = tail.next;
       }
 
-      await db.collection('transactions').insertOne(
-        tail.data
-      );
+      await db.write('transactions', null, tail.data);
 
       console.log(
         `<DRV> :: A transaction was added.`,

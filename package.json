@@ -1,6 +1,6 @@
 {
   "name": "drv-core",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "scripts": {
     "start": "node index",
     "test": "node tests"
@@ -8,7 +8,6 @@
   "dependencies": {
     "crypto-linked-list": "^1.0.3",
     "dotenv": "^10.0.0",
-    "mongodb": "^4.1.4",
     "node-fetch-commonjs": "^3.1.1",
     "node-service-client": "^1.0.2"
   }

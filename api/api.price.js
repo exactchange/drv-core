@@ -10,24 +10,7 @@ API.Price
   Database
   */
 
-  const {
-    BLOCKCHAIN_DB_NAME,
-    BLOCKCHAIN_MONGO_URI
-  } = process.env;
-
-  const mongo = require('../mongo');
-
-  let db;
-
-  mongo(BLOCKCHAIN_MONGO_URI, async (error, client) => {
-    if (error) {
-      console.log('<DRV> :: Database Error:', error);
-
-      return;
-    }
-
-    db = client.db(BLOCKCHAIN_DB_NAME);
-  });
+  const db = require('../data');
 
   /*
   Exports
@@ -35,7 +18,8 @@ API.Price
 
   module.exports = () => {
     const getPrice = async () => {
-      const transactionsResult = await db.collection('transactions').find().toArray();
+      let transactionsResult = await db.read('transactions');
+      transactionResult = transactionResult.data;
 
       if (transactionsResult.length) {
         const prices = transactionsResult.map(({ price }) => price);
@@ -53,7 +37,8 @@ API.Price
     const getInventory = async () => {
       let inventory = 1;
 
-      const transactionsResult = await db.collection('transactions').find().toArray();
+      let transactionsResult = await db.read('transactions')
+      transactionResult = dbTransactionResult.data;
 
       if (transactionsResult.length) {
 
