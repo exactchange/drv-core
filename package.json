@@ -1,12 +1,13 @@
 {
   "name": "drv-core",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "scripts": {
     "start": "node index",
     "test": "node tests"
   },
   "dependencies": {
     "crypto-linked-list": "^1.0.3",
+    "diamond-search-and-store": "^0.1.7",
     "dotenv": "^10.0.0",
     "node-fetch-commonjs": "^3.1.1",
     "node-service-client": "^1.0.2"

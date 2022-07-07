@@ -10,7 +10,7 @@ API.Price
   Database
   */
 
-  const db = require('../data');
+  const dss = require('../diamond');
 
   /*
   Exports
@@ -18,7 +18,34 @@ API.Price
 
   module.exports = () => {
     const getPrice = async () => {
-      let transactionsResult = await db.read('transactions');
+      let transactionsResult = await dss.onHttpPost(
+        {
+          method: 'read',
+          body: {
+            collectionName: 'transactions'
+          },
+          route: {
+            path: 'dss'
+          },
+          path: 'read'
+        },
+        {
+          status: code => ({
+            end: () => ({
+              error: {
+                code,
+                message: '<DRV> Service error (POST).'
+              }
+            })
+          }),
+          send: body => ({
+            status: 200,
+            success: true,
+            data: body
+          })
+        }
+      );
+
       transactionsResult = transactionsResult.data;
 
       if (transactionsResult.length) {
@@ -37,7 +64,34 @@ API.Price
     const getInventory = async () => {
       let inventory = 1;
 
-      let transactionsResult = await db.read('transactions')
+      let transactionsResult = await dss.onHttpPost(
+        {
+          method: 'read',
+          body: {
+            collectionName: 'transactions'
+          },
+          route: {
+            path: 'dss'
+          },
+          path: 'read'
+        },
+        {
+          status: code => ({
+            end: () => ({
+              error: {
+                code,
+                message: '<DRV> Service error (POST).'
+              }
+            })
+          }),
+          send: body => ({
+            status: 200,
+            success: true,
+            data: body
+          })
+        }
+      );
+
       transactionsResult = transactionsResult.data;
 
       if (transactionsResult.length) {

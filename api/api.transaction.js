@@ -7,10 +7,9 @@ API.Transaction
   const { TREASURY_ADDRESS } = require('../strings');
   const { ROOT_VALUE } = require('../numbers');
   const { generateId } = require('../algorithms');
-  const db = require('../data');
+  const dss = require('../diamond');
 
   let transactions;
-
 
   /*
   Dependencies
@@ -24,29 +23,43 @@ API.Transaction
     Database
     */
 
-    transactions = new LinkedList([
+    transactions = new LinkedList();
+
+    let result = await dss.onHttpPost(
       {
-        timestamp: Date.now(),
-        hash: generateId(),
-        next: generateId(),
-        senderAddress: TREASURY_ADDRESS,
-        recipientAddress: TOKEN_ADDRESS,
-        contract: 'record',
-        usdValue: ROOT_VALUE,
-        drvValue: 1.00,
-        status: 'complete',
-        price: ROOT_VALUE
+        method: 'read',
+        body: {
+          collectionName: 'transactions'
+        },
+        route: {
+          path: 'dss'
+        },
+        path: 'read'
+      },
+      {
+        status: code => ({
+          end: () => ({
+            error: {
+              code,
+              message: '<DRV> Service error (POST).'
+            }
+          })
+        }),
+        send: body => ({
+          status: 200,
+          success: true,
+          data: body
+        })
       }
-    ]);
+    );
 
-    let dbTransactionResult = await db.read('transactions')
-    dbTransactionResult = dbTransactionResult.data;
+    result = result?.data?.data?.data || [];
 
-    if (dbTransactionResult.length) {
-      dbTransactionResult.forEach(transactions.add);
+    if (result?.length) {
+      result.forEach(transactions.add);
+
+      console.log('<DRV> :: Transactions loaded.');
     }
-
-    console.log('<DRV> :: Transactions loaded.');
   })();
 
   /*
@@ -116,7 +129,34 @@ API.Transaction
         tail = tail.next;
       }
 
-      await db.write('transactions', null, tail.data);
+      const result = await dss.onHttpPost(
+        {
+          method: 'write',
+          body: {
+            collectionName: 'transactions',
+            payload: tail.data
+          },
+          route: {
+            path: 'dss'
+          },
+          path: 'write'
+        },
+        {
+          status: code => ({
+            end: () => ({
+              error: {
+                code,
+                message: '<DRV> Service error (POST).'
+              }
+            })
+          }),
+          send: body => ({
+            status: 200,
+            success: true,
+            data: body
+          })
+        }
+      );
 
       console.log(
         `<DRV> :: A transaction was added.`,
