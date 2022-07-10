@@ -7,48 +7,64 @@
 **Content Types**
 
 ```
-  interface Text {
-    value: string;
+  class MagneticResourceText {
+    constructor (value: string) {
+      const text = value.replace(/\\|\-/g, '');
+
+      if (!text?.match(/magnet:\?xt=urn:[a-z0-9]+:[a-z0-9]{32}/i)) {
+        console.warn('Type error: Invalid Magnet URI.');
+      } else {
+        this.text = value;
+      }
+    }
+
+    text: string = '';
+
+    toString() {
+      return this.text;
+    }
+  }
+
+  type MagnetURI = MagneticResourceText;
+
+  type Text = {
     parent?: Text;
+    value: string;
   }
 
-  interface Namespace extends Text {
-    host: string;
-    port: number;
-  }
-
-  interface Copyright {
-    author: Namespace;
-    credits?: Copyright[];
+  type Claim = Text & {
     timestamp: number;
+    author: Text;
   }
 
-  interface Comment extends Text, Copyright {
-    likes: number;
+  type Certificate = Claim & {
+    entitled: Text[];
   }
 
-  interface Review extends Comment, Copyright {
+  type Comment = Claim & {
+    upvotes: number;
+  }
+
+  type Review = Comment & {
     rating: number;
-    reply?: Comment;
+    reply?: Claim;
   }
 
-  interface Article extends Comment, Copyright {
+  type Article = Certificate & {
     title: Text;
-    replies?: Comment[];
   }
 
-  interface Media extends Copyright {
-    data: string | ArrayBuffer;
+  type Media = Certificate & {
     type: "Image" | "Video" | "Audio";
   }
 
-  interface Sequence extends Copyright {
+  type Sequence = Certificate & {
     frames: Media[];
     thumbnail: Media;
   }
 
-  interface Stream extends Media {
-    connection: Namespace;
+  type Stream = Media & {
+    connection: Text;
   }
 ```
 
@@ -60,7 +76,7 @@ A *Proof of Value* is asserted whenever DRV is asserted to have some USD value. 
 
 Another way to assert value is to sell a product normally purchased in USD in DRV. Let's say you've sold a number of products online for 10.00 USD each, and now you want to accept crypto payments. For every sale where you accept DRV as payment, value will be asserted for the sale amount.
 
-Proof of Value occurs in the [`onTransaction`](./events/events.transaction.js) lifecycle method, which is invoked after the transaction has been inserted into the blockchain. If the value increased as a result of the transaction, a reward is mined (see *Transaction Rewards* below), and `onTransaction` is recursively called with the reward amount.
+Proof of Value occurs in the [`onTransaction`](./events/events.transaction.js) lifecycle method, which is invoked after the transaction has been inserted into the blockchain.
 
 **Assertion Misvaluations, Rejections, & Corrected Proofs of Value**
 
@@ -96,34 +112,6 @@ A Proof of Value Assertion will be rejected if the assertion exceeds the Deviati
 
 Misvaluations and Rejections are *automatically corrected* in the blockchain and the valuation is re-submitted within the Deviation Rate.
 
-**Transaction Rewards & Dilution**
-
-A Proof of Value Assertion that results in a price increase self-mitigates potential volatility through automatic dilution - by increasing the supply of crypto and rewarding it to the seller. This creates a situation where miners (token vendors) are rewarded for their contributions only when they add value, creating incentive to do so and minimizing overall dilutive effect.
-
-**Reward Ceiling**
-
-Rewards are always mined at the current value of DRV, and therefore cannot compound further rewards. Because the reward is a recursive call of `onTransaction` (invoked within `onTransaction`) the concept of rewards deriving from other rewards isn't technically feasable, as it would cause an infinite loop in `onTransaction` and crash the blockchain. This creates a natural Reward Ceiling that minimizes dilution and volatility associated with mining:
-
-```
-// ./events/events.transaction.js
-
-const priceDifference = parseFloat(price - priceApi.price);
-
-const reward = priceDifference > 0 && (
-  parseFloat(priceDifference * .1 * drvAmount)
-);
-
-if (reward) {
-  const rewardTransactionResult = await onTransaction({
-    senderAddress: 'treasury-0000-0000-0000-000000000000',
-    recipientAddress,
-    usdAmount: priceDifference * drvAmount,
-    drvAmount: reward
-  });
-
-  ...
-```
-
 **Long-term stability**
 
 The weight of each Proof of Value Assertion depends on the number of total transactions: For example a blockchain with millions of records will have a much stabler valuation (trading price) than a blockchain with only a few.
@@ -156,5 +144,5 @@ price = parseFloat(
 ```
 
 * * *
-DRV is forked from: [exactchange/embr](https://github.com/exactchange/embercoin)
+DRV is based on: [bennyschmidt/linked-list](https://github.com/bennyschmidt/linked-list)
 * * *

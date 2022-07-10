@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 /*
 Enforcements.Broadcast
  */
@@ -30,9 +32,11 @@ module.exports = async (transaction, peers) => {
   );
 
   if (!didConnectAndSend) {
+    // eslint-disable-next-line max-len
     console.log('<DRV> :: There are no peers online to echo the transaction. It will remain in a pending state until the next enforcement attempt.');
   }
 
+  // eslint-disable-next-line max-len
   console.log(`<DRV> :: Transaction was corroborated by ${confidence} peers (Confidence: ${Math.min(99, Math.min(4, confidence) / 4 * 100)}%).`);
 
   return didConnectAndSend ? COMPLETE : PENDING;

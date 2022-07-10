@@ -1,11 +1,7 @@
 /* eslint-disable no-magic-numbers */
 
 (() => {
-  const fs = require('fs').promises;
-  const fetch = require('node-fetch');
   const { http } = require('node-service-client');
-
-  const { NOT_ALLOWED_ERROR } = require('../errors');
 
   const dss = require('diamond-search-and-store/src/services/diamond');
 

@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 /*
  * (default)
  */
@@ -62,7 +64,7 @@ require('dotenv').config();
           price24hAgo: price24hAgo || price,
           marketCap,
           inventory
-        }
+        };
       },
       transactions: () => transactionApi.getTransactions()
     },
@@ -78,7 +80,8 @@ require('dotenv').config();
       }) => {
         const usd = Math.max(1, usdValue);
 
-        if (typeof(drvValue) !== 'number') {
+        if (typeof (drvValue) !== 'number') {
+          // eslint-disable-next-line no-param-reassign
           contract = NON_FUNGIBLE_RECORD;
         }
 

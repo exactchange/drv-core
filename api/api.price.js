@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 /*
 API.Price
  */
@@ -131,6 +133,6 @@ API.Price
       getPrice,
       getInventory,
       getMarketCap
-    }
+    };
   };
 })();

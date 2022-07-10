@@ -1,12 +1,10 @@
+/* eslint-disable no-magic-numbers */
+
 /*
 API.Transaction
  */
 
 (() => {
-  const { TOKEN_ADDRESS } = process.env;
-  const { TREASURY_ADDRESS } = require('../strings');
-  const { ROOT_VALUE } = require('../numbers');
-  const { generateId } = require('../algorithms');
   const dss = require('../diamond');
 
   let transactions;
@@ -129,7 +127,7 @@ API.Transaction
         tail = tail.next;
       }
 
-      const result = await dss.onHttpPost(
+      await dss.onHttpPost(
         {
           method: 'write',
           body: {

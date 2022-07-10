@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 /*
  * Events.Transaction
  */
@@ -10,11 +12,8 @@ const {
 const {
   DRV,
   USD,
-  TREASURY_ADDRESS,
   RECORD
 } = require('../strings');
-
-const { generateId } = require('../algorithms');
 
 (() => {
 
@@ -28,7 +27,6 @@ const { generateId } = require('../algorithms');
       drvValue,
       usdValue
     }) => {
-      let price;
       const isFungible = contract === RECORD;
 
       const apiPrice = await priceApi.getPrice();
@@ -45,41 +43,41 @@ const { generateId } = require('../algorithms');
         assertedPrice < (parseFloat(apiPrice) - (apiPrice * STANDARD_DEVIATION))
       );
 
-      if (isMisvaluation) {
-        if (isFungible) {
+      let price = parseFloat(apiPrice);
+
+      if (isFungible) {
+        if (isMisvaluation) {
           console.log(
+            // eslint-disable-next-line max-len
             `<DRV> :: Assertion Rejected: ${drvValue.toFixed(2)} ${DRV} is not proven to be worth ${(usdValue).toFixed(2)} ${USD} within a standard deviation of ${STANDARD_DEVIATION * 100}%.`
           );
-        } else {
+
           console.log(
-            `<DRV> :: Assertion Rejected: The content is not proven to be worth ${usdValue} ${USD} within a standard deviation of ${STANDARD_DEVIATION * 100}%.`
+            '<DRV> :: Correcting a misvaluation...'
+          );
+
+          const modifier = (
+            assertedPrice < apiPrice
+              ? (STANDARD_DEVIATION * -1)
+              : STANDARD_DEVIATION
+          );
+
+          price = parseFloat(
+            parseFloat(apiPrice * modifier) +
+            parseFloat(apiPrice)
+          );
+
+          console.log(
+            // eslint-disable-next-line max-len
+            `<DRV> :: A corrected proof of value was asserted: "1.00 ${DRV} == ${price.toFixed(2)} ${USD} (adjusted from ${assertedPrice.toFixed(2)} ${USD})".`,
+          );
+        } else {
+          price = usdValue;
+
+          console.log(
+            `<DRV> :: A proof of value was asserted: "1.00 ${DRV} == ${price.toFixed(2)} ${USD}".`,
           );
         }
-
-        console.log(
-          '<DRV> :: Correcting a misvaluation...'
-        );
-
-        const modifier = (
-          assertedPrice < apiPrice
-            ? (STANDARD_DEVIATION * -1)
-            : STANDARD_DEVIATION
-        );
-
-        price = parseFloat(
-          parseFloat(apiPrice * modifier) +
-          parseFloat(apiPrice)
-        );
-
-        console.log(
-          `<DRV> :: A corrected proof of value was asserted: "1.00 ${DRV} == ${price.toFixed(2)} ${USD} (adjusted from ${assertedPrice.toFixed(2)} ${USD})".`,
-        );
-      } else {
-        price = usdValue;
-
-        console.log(
-          `<DRV> :: A proof of value was asserted: "1.00 ${DRV} == ${price.toFixed(2)} ${USD}".`,
-        );
       }
 
       return {
@@ -96,11 +94,8 @@ const { generateId } = require('../algorithms');
       contract,
       usdValue,
       drvValue,
-      status,
-      isReward = false
+      status
     }) => {
-      let currentPrice = await priceApi.getPrice();
-
       const transaction = {
         hash,
         next,
@@ -120,33 +115,12 @@ const { generateId } = require('../algorithms');
 
       if (!success) return;
 
-      const priceDifference = parseFloat(price - parseFloat(currentPrice));
-
-      const reward = priceDifference > 0 && (
-        parseFloat(priceDifference * .1 * drvValue)
-      );
-
-      if (!isReward && reward) {
-        await onTransaction({
-          hash: transactionApi.getTransactions().pop().next,
-          next: generateId(),
-          senderAddress: TREASURY_ADDRESS,
-          recipientAddress: senderAddress,
-          contract,
-          usdValue: priceDifference * drvValue,
-          drvValue: reward,
-          status,
-          isReward: true
-        });
-      }
-
       const marketCap = await priceApi.getMarketCap();
 
       return {
         success,
         price,
-        marketCap,
-        reward
+        marketCap
       };
     };
 
