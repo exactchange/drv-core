@@ -78,8 +78,6 @@ require('dotenv').config();
         peers = [],
         isTest = false
       }) => {
-        const usd = Math.max(1, usdValue);
-
         if (typeof (drvValue) !== 'number') {
           // eslint-disable-next-line no-param-reassign
           contract = NON_FUNGIBLE_RECORD;
@@ -95,7 +93,7 @@ require('dotenv').config();
           senderAddress,
           recipientAddress,
           contract,
-          usdValue: usd,
+          usdValue,
           drvValue: drv
         };
 
